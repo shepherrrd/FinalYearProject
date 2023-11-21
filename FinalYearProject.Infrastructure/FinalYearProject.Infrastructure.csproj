@@ -13,7 +13,6 @@
     <Folder Include="Infrastructure\Services\Implementations\" />
     <Folder Include="Infrastructure\Swagger\" />
     <Folder Include="Infrastructure\Persistence\" />
-    <Folder Include="Infrastructure\Utilities\Enums\" />
     <Folder Include="Infrastructure\Utilities\DataExtension\" />
   </ItemGroup>
 
