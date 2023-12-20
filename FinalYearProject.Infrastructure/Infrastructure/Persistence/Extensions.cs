@@ -9,16 +9,52 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics.Metrics;
+using System.Reflection;
 using System.Text;
 
 namespace FinalYearProject.Infrastructure.Infrastructure.Persistence;
 
-public  static class Extensions
-{
-    
-    public static IServiceCollection RegisterPersistence(this IServiceCollection services, IConfiguration configuration)
+public  static class Extensions { 
+        public static IServiceCollection RegisterApplication(this IServiceCollection services)
+        {
+        
+        services.AddMemoryCache();
+            services.AddHttpClient();
+            services.AddHttpContextAccessor();
+
+            return services;
+        }
+
+        public static IServiceCollection RegisterCors(this IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                var origins = new string[]
+                {
+                    "http://localhost:3000",
+                    "https://localhost:3000"
+                };
+
+                options.AddPolicy("MyCorsPolicy", builder =>
+                {
+                    
+                    builder.AllowAnyOrigin();
+                    builder.AllowAnyMethod();
+                    builder.AllowAnyHeader();
+                    builder.AllowCredentials();
+                    builder.WithOrigins(origins);
+
+                });
+            });
+
+            return services;
+        }
+
+
+        public static IServiceCollection RegisterPersistence(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<FinalYearDBContext>(option =>
         {

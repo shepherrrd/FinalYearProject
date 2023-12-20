@@ -14,20 +14,31 @@ public record BaseRecordEntity
     public DateTimeOffset TimeUpdated { get; set; } = default!;
 }
 
-public class Country : BaseEntity
+public class BaseResponse
 {
-    public string? Name { get; set; }
-    public string? Code { get; set; }
-    public string? CCode { get; set; }
-    public string? IsoCode { get; set; }
-    public string? Currency { get; set; }
-    public string? Icon { get; set; }
-}
+    public bool Status { get; set; }
+    public string? Message { get; set; }
 
-public class JwtSettings
-{
-#nullable disable
-    public string Secret { get; set; }
-    public int ExpiryMinutes { get; set; }
-    public string Issuer { get; set; }
+    public BaseResponse(bool status , string message)
+    {
+        Status = status;
+        Message = message;
+    }
 }
+    public class Country : BaseEntity
+    {
+        public string? Name { get; set; }
+        public string? Code { get; set; }
+        public string? CCode { get; set; }
+        public string? IsoCode { get; set; }
+        public string? Currency { get; set; }
+        public string? Icon { get; set; }
+    }
+
+    public class JwtSettings
+    {
+#nullable disable
+        public string Secret { get; set; }
+        public int ExpiryMinutes { get; set; }
+        public string Issuer { get; set; }
+   }
