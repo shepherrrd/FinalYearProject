@@ -11,7 +11,6 @@ public class DataAggregatorUser : IdentityUser<long>
     public string? LastName { get; set; }
     public string? MiddleName { get; set; }
     public UserType UserType { get; set; }
-    public string? EmailAddress { get; set; }
     public int? CountryID { get; set; }
     public long? HospitalInfo { get; set; }
     public long? ResearchCenterInfo { get; set; }

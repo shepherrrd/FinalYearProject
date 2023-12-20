@@ -3,7 +3,6 @@ using FinalYearProject.Infrastructure.Infrastructure.Persistence;
 using FluentValidation.AspNetCore;
 using FluentValidation;
 using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
 using FinalYearProject.Infrastructure.Data.Models;
 

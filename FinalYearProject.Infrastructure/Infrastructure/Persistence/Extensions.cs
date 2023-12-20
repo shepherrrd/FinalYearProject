@@ -4,6 +4,8 @@ using FinalYearProject.Infrastructure.Data.Entities;
 using FinalYearProject.Infrastructure.Infrastructure.Auth;
 using FinalYearProject.Infrastructure.Infrastructure.Auth.JWT;
 using FinalYearProject.Infrastructure.Infrastructure.Utilities.Enums;
+using FinalYearProject.Infrastructure.Services.Implementations;
+using FinalYearProject.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +22,7 @@ namespace FinalYearProject.Infrastructure.Infrastructure.Persistence;
 public  static class Extensions { 
         public static IServiceCollection RegisterApplication(this IServiceCollection services)
         {
-        
+        services.AddScoped<ICloudinaryService, CloudinaryService>();
         services.AddMemoryCache();
             services.AddHttpClient();
             services.AddHttpContextAccessor();
