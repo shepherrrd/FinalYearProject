@@ -13,6 +13,63 @@ public enum UserType
     [Description("Research Center")]
     ResearchCenter
 }
+public enum OtpCodeStatusEnum
+{
+    [Description("Sent")]
+    Sent = 1,
+
+    [Description("Verified")]
+    Verified,
+
+    [Description("Expired")]
+    Expired,
+
+    [Description("Invalidated")]
+    Invalidated
+}
+
+public enum OtpVerificationPurposeEnum
+{
+    [Description("Phone Confirmation")]
+    PhoneConfirmation = 1,
+
+    [Description("Email Confirmation")]
+    EmailConfirmation,
+
+    [Description("Bvn Verification")]
+    BvnVerification,
+
+    [Description("Password Reset")]
+    PasswordReset,
+
+    [Description("Pin Reset")]
+    PinReset
+}
+
+public enum OtpRecipientTypeEnum
+{
+    [Description("Phone Number")]
+    Phone = 1,
+
+    [Description("Email Address")]
+    Email
+}
+
+public enum OtpCodeLengthEnum
+{
+    [Description("Four")]
+    Four = 1,
+
+    [Description("Six")]
+    Six
+}
+public enum AccountStatusEnum
+{
+    [Description("Active")]
+    Active = 1,
+    [Description("Suspended")]
+    Suspended
+}
 
 public static class Enums
 {
