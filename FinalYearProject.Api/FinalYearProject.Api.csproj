@@ -21,4 +21,8 @@
     <ProjectReference Include="..\FinalYearProject.Infrastructure\FinalYearProject.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Assets\plaintexts\" />
+  </ItemGroup>
+
 </Project>

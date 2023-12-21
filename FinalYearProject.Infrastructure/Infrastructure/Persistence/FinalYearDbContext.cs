@@ -18,6 +18,8 @@ public class FinalYearDBContext : IdentityDbContext<DataAggregatorUser, Applicat
 
     public DbSet<HospitalInfo> HospitalInfos { get; set; }
 
+    public DbSet<OtpVerification> OtpVerifications {  get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

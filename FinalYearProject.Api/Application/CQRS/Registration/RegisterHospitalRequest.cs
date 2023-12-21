@@ -1,11 +1,14 @@
 ﻿using FinalYearProject.Infrastructure.Data.Entities;
+using FinalYearProject.Infrastructure.Data.Models;
 using FinalYearProject.Infrastructure.Infrastructure.Persistence;
+using FinalYearProject.Infrastructure.Infrastructure.Services.Interfaces;
 using FinalYearProject.Infrastructure.Infrastructure.Utilities.Enums;
 using FinalYearProject.Infrastructure.Services.Interfaces;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing.Text;
 using System.Transactions;
 
 namespace FinalYearProject.Api.Application.CQRS.Registration;
@@ -47,6 +50,7 @@ public class RegisterHospitalRequestValidator : AbstractValidator<RegisterHospit
         RuleFor(x => x.NafdacDocument).NotNull().NotEmpty();
 
         RuleFor(x => x.Password).NotNull().NotEmpty().WithMessage("Password field is required.")
+            .MinimumLength(8)
             .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!#%*?&])[A-Za-z\d@$!#%*?&]{8,}$").WithMessage("Invalid password format");
         RuleFor(x => x.ConfirmPassword)
             .Equal(x => x.Password).WithMessage("The password and confirmation password do not match.");
@@ -69,21 +73,25 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
     private readonly FinalYearDBContext _context;
     private readonly ILogger<RegisterHospitalRequestHandler> _logger;
     private ICloudinaryService _cloudinary;
-    private UserManager<DataAggregatorUser> _usermanager { get; }
+    private UserManager<DataAggregatorUser> _usermanager;
+    private readonly IAccountService _account;
     public RegisterHospitalRequestHandler(FinalYearDBContext context,
         ILogger<RegisterHospitalRequestHandler> logger,
         ICloudinaryService cloudinary,
-        UserManager<DataAggregatorUser> usermanager
+        UserManager<DataAggregatorUser> usermanager,
+        IAccountService account
         )
     {
         _context = context;
         _logger = logger;
         _cloudinary = cloudinary;
-        usermanager = _usermanager!;
+        _usermanager = usermanager;
+        _account = account;
     }
 
     public async Task<BaseResponse> Handle(RegisterHospitalRequest request, CancellationToken cancellationToken)
     {
+         
         try
         {
             using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
@@ -102,7 +110,7 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
                 }
                 cacstream.Position = 0;
 
-                var cacupload = await _cloudinary.UploadImageAsync(cacstream,request.CacDocument.FileName);
+                var cacupload = await _cloudinary.UploadImageAsync(cacstream, Guid.NewGuid().ToString());
                 var nafstream = new MemoryStream();
 
                 using (var stream = request.NafdacDocument!.OpenReadStream())
@@ -110,7 +118,7 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
                     await stream.CopyToAsync(nafstream);
                 }
                 nafstream.Position = 0;
-                var nafdacupload = await _cloudinary.UploadImageAsync(nafstream,request.NafdacDocument.FileName);
+                var nafdacupload = await _cloudinary.UploadImageAsync(nafstream,Guid.NewGuid().ToString());
 
                 if (!cacupload.Status || !nafdacupload.Status)
                 {
@@ -146,7 +154,7 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
                 {
                     Email = request.HospitalEmail,
                     HospitalInfo = hospinfo.ID,
-                    AccountStatus = AccountStatusEnum.Active,
+                    AccountStatus = AccountStatusEnum.InActive,
                     UserType = UserType.Hospital,
                     TimeCreated = DateTime.UtcNow,
                     TimeUpdated = DateTime.UtcNow,
@@ -155,10 +163,23 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
                     UserName = request.HospitalEmail!
 
                 };
-                
-
+               
                 await _context.AddAsync(user, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
+                var sendemail = await _account.SendOTPAsync(new SendOTPRequest
+                {
+                    FirstName = request.HospitalName!,
+                    OtpCodeLength = OtpCodeLengthEnum.Six,
+                    Purpose = OtpVerificationPurposeEnum.EmailConfirmation,
+                    Recipient = request.HospitalEmail,
+                    RecipientType = OtpRecipientTypeEnum.Email,
+                    UserId = user.Id
+
+                },cancellationToken);
+                if (!sendemail.Status)
+                {
+                    return new BaseResponse(false, sendemail.Message!);
+                }
                 var addpassword = await _usermanager.AddPasswordAsync(user, request.Password!);
                 if (!addpassword.Succeeded)
                     return new BaseResponse(false, "An Error Occured While Trying to Complete your Registration");
@@ -169,7 +190,7 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
 
                  _context.UpdateRange(hospinfo, cacInfo,nafdacInfo);
                 await _context.SaveChangesAsync(cancellationToken);
-                await transaction.CommitAsync(cancellationToken);
+               await transaction.CommitAsync(cancellationToken);
                 return new BaseResponse(true, "Registration Successfull");
             
             }catch (Exception ex)

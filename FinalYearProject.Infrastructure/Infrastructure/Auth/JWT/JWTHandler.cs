@@ -84,7 +84,6 @@ namespace FinalYearProject.Infrastructure.Infrastructure.Auth.JWT
                 AccountStatus = request.AccountStatus,
                 Token = token,
                 Expires = (long)new TimeSpan(expires.Ticks).TotalSeconds,
-                HandleName = request.HandleName,
                 UserProfilePhoto = request.UserProfilePhoto,
                 Privileges = request.Privileges,
                 RoleText = request.RoleText,

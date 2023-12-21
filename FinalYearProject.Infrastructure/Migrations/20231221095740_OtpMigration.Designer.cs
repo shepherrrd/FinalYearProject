@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using FinalYearProject.Infrastructure.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinalYearProject.Infrastructure.Migrations
 {
     [DbContext(typeof(FinalYearDBContext))]
-    partial class FinalYearDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231221095740_OtpMigration")]
+    partial class OtpMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

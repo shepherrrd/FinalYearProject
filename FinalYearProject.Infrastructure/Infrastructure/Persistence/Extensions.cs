@@ -3,6 +3,8 @@
 using FinalYearProject.Infrastructure.Data.Entities;
 using FinalYearProject.Infrastructure.Infrastructure.Auth;
 using FinalYearProject.Infrastructure.Infrastructure.Auth.JWT;
+using FinalYearProject.Infrastructure.Infrastructure.Services.Implementations;
+using FinalYearProject.Infrastructure.Infrastructure.Services.Interfaces;
 using FinalYearProject.Infrastructure.Infrastructure.Utilities.Enums;
 using FinalYearProject.Infrastructure.Services.Implementations;
 using FinalYearProject.Infrastructure.Services.Interfaces;
@@ -13,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Payultra.Infrastructure.Services.Implementations;
 using System.Diagnostics.Metrics;
 using System.Reflection;
 using System.Text;
@@ -26,8 +29,13 @@ public  static class Extensions {
         services.AddMemoryCache();
             services.AddHttpClient();
             services.AddHttpContextAccessor();
+        services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<ICloudinaryService, CloudinaryService>();
+        services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<ISendGridService, SendGridService>();
+        services.AddScoped<IUtilityService, UtilityService>();
 
-            return services;
+        return services;
         }
 
         public static IServiceCollection RegisterCors(this IServiceCollection services)

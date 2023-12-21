@@ -21,7 +21,6 @@ public class LoginResponse
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string MiddleName { get; set; }
-    public string HandleName { get; set; }
     public UserType UserType { get; set; }
     public string UserProfilePhoto { get; set; }
     public AccountStatusEnum AccountStatus { get; set; }
@@ -39,7 +38,6 @@ public class JwtRequest
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string MiddleName { get; set; }
-    public string HandleName { get; set; }
     public string EmailAddress { get; set; }
     public UserType UserType { get; set; }
     public AccountStatusEnum AccountStatus { get; set; }

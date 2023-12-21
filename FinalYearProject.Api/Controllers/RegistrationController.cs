@@ -21,5 +21,15 @@ namespace FinalYearProject.Api.Controllers
                 return BadRequest(response);
             return Ok(response);
         }
+
+
+        [HttpPost("RegisterResearchCenter")]
+        public async Task<IActionResult> RegisterResearchCenter([FromForm] RegisterResearchCenterRequest request)
+        {
+            var response = await _sender.Send(request);
+            if (!response.Status)
+                return BadRequest(response);
+            return Ok(response);
+        }
     }
 }

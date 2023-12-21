@@ -30,20 +30,13 @@ public enum OtpCodeStatusEnum
 
 public enum OtpVerificationPurposeEnum
 {
-    [Description("Phone Confirmation")]
-    PhoneConfirmation = 1,
+   
 
     [Description("Email Confirmation")]
     EmailConfirmation,
 
-    [Description("Bvn Verification")]
-    BvnVerification,
-
     [Description("Password Reset")]
-    PasswordReset,
-
-    [Description("Pin Reset")]
-    PinReset
+    PasswordReset
 }
 
 public enum OtpRecipientTypeEnum
@@ -68,7 +61,25 @@ public enum AccountStatusEnum
     [Description("Active")]
     Active = 1,
     [Description("Suspended")]
-    Suspended
+    Suspended,
+    [Description("InActive")]
+    InActive
+}
+public enum EmailTitleEnum
+{
+    EMAILVERIFICATION = 1,
+    PASSWORDRESET,
+    BVNVERIFICATION,
+    WELCOME,
+    TRANSACTIONSTATEMENT,
+    DOCUMENTUPLOAD,
+    KYCCOMPLETED,
+    INTERNATIONALWALLETREQUEST,
+    CREATENEWUSER,
+    KYCAPPROVED,
+    KYCREJECTED,
+    CONNECTEDCARDAPPROVED,
+    CONNECTEDCARDREJECTED
 }
 
 public static class Enums
