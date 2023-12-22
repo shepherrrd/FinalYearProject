@@ -27,7 +27,6 @@ namespace FinalYearProject.Infrastructure.Infrastructure.Auth
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredUniqueChars = 1;
-
                 options.SignIn.RequireConfirmedEmail = true;
             })
             .AddRoles<ApplicationRole>()
@@ -45,20 +44,20 @@ namespace FinalYearProject.Infrastructure.Infrastructure.Auth
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(o =>
             {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
+                o.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
-                    ValidateAudience = false,
+                    ValidIssuer = "shepherd",
+                    ValidAudience = "https://localhost:3000",
+                    IssuerSigningKey = new SymmetricSecurityKey
+                        (Encoding.UTF8.GetBytes(configuration["JwtSettings:Secret"]!)),
                     ValidateIssuer = false,
-                    RequireExpirationTime = true,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero,
-                    ValidIssuer = configuration["JwtSettings:Issuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["JwtSettings:Secret"]!)),
+                    ValidateAudience = true,
+                    ValidateLifetime = false,
+                    ClockSkew = TimeSpan.FromSeconds(0),
+                    ValidateIssuerSigningKey = true
                 };
             });
 

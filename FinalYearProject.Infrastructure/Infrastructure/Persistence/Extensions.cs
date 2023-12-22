@@ -86,18 +86,18 @@ public  static class Extensions {
             {
                 AccountStatus = AccountStatusEnum.Active,
                 ConcurrencyStamp = Guid.NewGuid().ToString("D"),
-                Email = "technology@payultra.com",
+                Email = "technology@dataaggregator.com",
                 EmailConfirmed = true,
-                FirstName = "PayUltra",
+                FirstName = "FInalYear",
                 Id = 1,
                 LastName = "Administrator",
                 NormalizedEmail = "TECHNOLOGY@DATAAGGREGATOR.COM",
-                NormalizedUserName = "Shepherd",
+                NormalizedUserName = "TECHNOLOGY@DATAAGGREGATOR.COM",
                 PasswordHash = new PasswordHasher<DataAggregatorUser>().HashPassword(null!, "password"),
                 SecurityStamp = GenerateSecurityStamp(),
                 TimeCreated = DateTimeOffset.UtcNow,
                 TimeUpdated = DateTimeOffset.UtcNow,
-                UserName = "technology@payultra.com",
+                UserName = "TECHNOLOGY@DATAAGGREGATOR.COM",
                 UserType = UserType.Admin
             }
         );

@@ -8,8 +8,6 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing.Text;
-using System.Transactions;
 
 namespace FinalYearProject.Api.Application.CQRS.Registration;
 
@@ -96,7 +94,7 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
         {
             using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try {
-                var existinguser = await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email!.Equals(request.HospitalEmail));
+                var existinguser = await _context.Users.AsNoTracking().Where(x => x.Email!.ToLower()! == request.HospitalEmail!.ToLower()).FirstOrDefaultAsync();
                 if (existinguser is not null)
                 {
                     _logger.LogInformation($"REGISTER_HOSPITAL_REQUEST =>  User with email {request.HospitalEmail} was taken");
@@ -152,15 +150,16 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
 
                 var user = new DataAggregatorUser()
                 {
-                    Email = request.HospitalEmail,
+                    Email = request.HospitalEmail!.ToLower(),
                     HospitalInfo = hospinfo.ID,
+                    FirstName = hospinfo.HospitalName,
                     AccountStatus = AccountStatusEnum.InActive,
                     UserType = UserType.Hospital,
                     TimeCreated = DateTime.UtcNow,
                     TimeUpdated = DateTime.UtcNow,
                     NormalizedEmail = request.HospitalEmail!.ToUpperInvariant(),
                     NormalizedUserName = request.HospitalEmail!.ToUpperInvariant(),
-                    UserName = request.HospitalEmail!
+                    UserName = request.HospitalEmail.ToLower()!
 
                 };
                
@@ -197,7 +196,7 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
             {
                 _logger.LogError(ex,$"REGISTER_HOSPITAL_REQUEST =>something went wrong ");
                 await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                return new BaseResponse(false, "An Error Occured While Trying To COmplete Your Registration"); ;
+                return new BaseResponse(false, "An Error Occured While Trying To Complete Your Registration"); ;
             }
             
 

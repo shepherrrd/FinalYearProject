@@ -1,6 +1,5 @@
 ﻿using FinalYearProject.Api.Application.CQRS.Registration;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinalYearProject.Api.Controllers

@@ -3,13 +3,12 @@ using FinalYearProject.Infrastructure.Data.Models;
 using FinalYearProject.Infrastructure.Infrastructure.Utilities.Enums;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Configuration;
 namespace FinalYearProject.Infrastructure.Infrastructure.Auth.JWT
 {
     public interface IJwtHandler
@@ -25,13 +24,15 @@ namespace FinalYearProject.Infrastructure.Infrastructure.Auth.JWT
         private readonly SigningCredentials _signingCredentials;
         private readonly JwtHeader _jwtHeader;
         private readonly TokenValidationParameters _tokenValidationParameters;
+        private readonly IConfiguration _configuration;
 
-        public JwtHandler(IOptions<JwtSettings> options)
+        public JwtHandler(IOptions<JwtSettings> options, IConfiguration configuration)
         {
             _options = options.Value;
             _issuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_options.Secret));
             _signingCredentials = new SigningCredentials(_issuerSigningKey, SecurityAlgorithms.HmacSha256);
             _jwtHeader = new JwtHeader(_signingCredentials);
+            _configuration = configuration;
             _tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
@@ -39,38 +40,46 @@ namespace FinalYearProject.Infrastructure.Infrastructure.Auth.JWT
                 ValidateIssuer = false,
                 RequireExpirationTime = true,
                 ValidateLifetime = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_options.Secret))
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["JwtSettings:Secret"]!))
             };
+            
         }
 
         public LoginResponse Create(JwtRequest request)
         {
+            var issuer = _configuration["JwtSettings:Issuer"];
+            var audience = _configuration["JwtSettings:Audience"];
+            var key = Encoding.ASCII.GetBytes(_configuration["JwtSettings:Secret"]!);
             var nowUtc = DateTime.UtcNow;
-            var expires = nowUtc.AddMinutes(_options.ExpiryMinutes);
-            var centuryBegins = new DateTime(1970, 1, 1).ToUniversalTime();
-            var exp = (long)new TimeSpan(expires.Ticks - centuryBegins.Ticks).TotalSeconds;
-            var now = (long)new TimeSpan(nowUtc.Ticks - centuryBegins.Ticks).TotalSeconds;
-
-            var payload = new JwtPayload
-            {
-                {"sub", request.UserId},
-                {"iss", _options.Issuer},
-                {"iat", now},
-                {"exp", exp},
-                {"unique_name", request.EmailAddress},
-                {"PolicyCode", request.ProfileCode},
-                {"AccountStatus", (int)request.AccountStatus},
-                {"IsKycVerified", request.IsKycVerified}
-            };
-
+            var expires = nowUtc.AddMinutes(525600);
+            var claims = new List<Claim>
+{
+         new Claim("sub", request.UserId.ToString()),
+         new Claim(JwtRegisteredClaimNames.Iat, nowUtc.ToString(), ClaimValueTypes.Integer64),
+         new Claim("unique_name", request.EmailAddress),
+         new Claim("PolicyCode", request.ProfileCode),
+            new Claim("AccountStatus", ((int)request.AccountStatus).ToString()),
+            new Claim(JwtRegisteredClaimNames.Iss,issuer!),
+            new Claim(JwtRegisteredClaimNames.Aud,audience!),
+                };
             if (request.UserType == UserType.Admin)
             {
-                payload.Add("Email", request.EmailAddress);
-                payload.Add("UserType", (int)request.UserType);
-                payload.Add("Privilege", request.Privileges);
+                claims.Add(new Claim("Email", request.EmailAddress));
+                claims.Add(new Claim("UserType", ((int)request.UserType).ToString()));
+                claims.Add(new Claim("Privilege", request.Privileges));
             }
-            var jwt = new JwtSecurityToken(_jwtHeader, payload);
-            var token = _jwtSecurityTokenHandler.WriteToken(jwt);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = expires,
+                Issuer = issuer,
+                Audience = audience,
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var jwtToken = tokenHandler.WriteToken(token);
+
 
             return new LoginResponse
             {
@@ -82,14 +91,11 @@ namespace FinalYearProject.Infrastructure.Infrastructure.Auth.JWT
                 IsEmailVerified = request.IsEmailVerified,
                 UserType = request.UserType,
                 AccountStatus = request.AccountStatus,
-                Token = token,
+                Token = jwtToken,
                 Expires = (long)new TimeSpan(expires.Ticks).TotalSeconds,
-                UserProfilePhoto = request.UserProfilePhoto,
                 Privileges = request.Privileges,
                 RoleText = request.RoleText,
                 RoleId = request.RoleId
-
-                //RoleId = request.RoleId
             };
         }
     }
