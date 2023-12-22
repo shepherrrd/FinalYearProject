@@ -104,7 +104,7 @@ public class RegisterResearchCenterRequestHandler : IRequestHandler<RegisterRese
         using var transanction = await _context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
             try
             {
-                var existinguser = await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email!.Equals(request.Email));
+                var existinguser = await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email.ToLower()!.Equals(request.Email.ToLower()));
                 if (existinguser is not null)
                 {
                     _logger.LogInformation($"REGISTER_HOSPITAL_REQUEST =>  User with email {request.Email} was taken");
@@ -180,15 +180,16 @@ public class RegisterResearchCenterRequestHandler : IRequestHandler<RegisterRese
 
                 var user = new DataAggregatorUser()
                 {
-                    Email = request.Email,
+                    Email = request.Email.ToLower(),
                     ResearchCenterInfo = researchcenter.ID,
                     AccountStatus = AccountStatusEnum.InActive,
+                    FirstName = request.FirstName,
                     UserType = UserType.ResearchCenter,
                     TimeCreated = DateTime.UtcNow,
                     TimeUpdated = DateTime.UtcNow,
                     NormalizedEmail = request.Email!.ToUpperInvariant(),
                     NormalizedUserName = request.Email!.ToUpperInvariant(),
-                    UserName = request.Email!,
+                    UserName = request.Email.ToLower()!,
                     LastName = request.LastName,
                     MiddleName = request.MiddleName, 
                     

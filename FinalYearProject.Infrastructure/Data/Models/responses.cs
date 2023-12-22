@@ -22,7 +22,6 @@ public class LoginResponse
     public string LastName { get; set; }
     public string MiddleName { get; set; }
     public UserType UserType { get; set; }
-    public string UserProfilePhoto { get; set; }
     public AccountStatusEnum AccountStatus { get; set; }
     public long RoleId { get; set; }
     public string RoleText { get; set; }
@@ -46,7 +45,5 @@ public class JwtRequest
     public string RoleText { get; set; }
     public long UserId { get; set; }
     public bool IsEmailVerified { get; set; }
-    public string UserProfilePhoto { get; set; }
     public string Privileges { get; set; }
-    public bool IsKycVerified { get; set; }
 }
