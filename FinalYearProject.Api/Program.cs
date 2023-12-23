@@ -28,6 +28,7 @@ builder.Services.RegisterIdentity();
 builder.Services.RegisterAuthentication(builder.Configuration);
 builder.Services.RegisterAuthorization();
 builder.Services.RegisterJwt(builder.Configuration);
+builder.Services.RegisterCors();
 builder.Services.RegisterSwagger();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.AddFluentValidationAutoValidation();
