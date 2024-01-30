@@ -8,17 +8,11 @@ using FinalYearProject.Infrastructure.Infrastructure.Services.Interfaces;
 using FinalYearProject.Infrastructure.Infrastructure.Utilities.Enums;
 using FinalYearProject.Infrastructure.Services.Implementations;
 using FinalYearProject.Infrastructure.Services.Interfaces;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Payultra.Infrastructure.Services.Implementations;
-using System.Diagnostics.Metrics;
-using System.Reflection;
-using System.Text;
 
 namespace FinalYearProject.Infrastructure.Infrastructure.Persistence;
 
@@ -45,7 +39,8 @@ public  static class Extensions {
                 var origins = new string[]
                 {
                     "http://localhost:3000",
-                    "https://localhost:3000"
+                    "https://finalyearproject-qvvz.onrender.com",
+                    "https://datarepository.vercel.app"
                 };
 
                 options.AddPolicy("MyCorsPolicy", builder =>

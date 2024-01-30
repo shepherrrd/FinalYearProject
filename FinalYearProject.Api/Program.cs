@@ -61,13 +61,12 @@ builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if(app.Environment.IsDevelopment())
-{
+
     app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), appBuilder =>
     {
         app.UseSwaggerService();
     });
-}
+
 app.UseHttpsRedirection();
 app.UseCors("MyCorsPolicy");
 app.UseStaticFiles();

@@ -215,7 +215,15 @@ public class RegisterResearchCenterRequestHandler : IRequestHandler<RegisterRese
                 var addpassword = await _usermanager.AddPasswordAsync(user, request.Password!);
                 if (!addpassword.Succeeded)
                     return new BaseResponse(false, "An Error Occured While Trying to Complete your Registration");
-
+                var requesResearchCenter = new Request
+                {
+                    DateRequested = DateTimeOffset.UtcNow,
+                    IsApproved = false,
+                    Documents = $";{passportinfo.Id};{degreeinfo.Id};{researchproposalinfo.Id};{irbapprovalinfo.Id}",
+                    UserID = user.Id,
+                };
+                await _context.AddAsync(requesResearchCenter, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
                 degreeinfo.UserID = user.Id;
                 passportinfo.UserID = user.Id;
                 researchproposalinfo.UserID = user.Id;
@@ -226,7 +234,6 @@ public class RegisterResearchCenterRequestHandler : IRequestHandler<RegisterRese
                 await _context.SaveChangesAsync(cancellationToken);
                await transanction.CommitAsync(cancellationToken);
                 return new BaseResponse(true, "Registration Successfull");
-
             }
             catch (Exception ex)
             {

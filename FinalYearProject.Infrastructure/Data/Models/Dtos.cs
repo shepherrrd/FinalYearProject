@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinalYearProject.Infrastructure.Data.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,6 +46,13 @@ namespace FinalYearProject.Infrastructure.Data.Models
         public string? AttachementType { get; set; }
     }
 
+    public class RequestResponse : BaseEntity
+    {
+        public string Description { get; set; } = default!;
+        public string IrbProposal { get; set; } = default!;
+        public  string Passport { get; set; } = default!;
+        public string Name { get; set; } = default!;
+    }
     public class MultipleEmailRequest
     {
         public string? RecipientName { get; set; }
