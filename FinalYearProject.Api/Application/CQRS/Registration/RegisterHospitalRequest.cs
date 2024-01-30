@@ -182,7 +182,14 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
                 var addpassword = await _usermanager.AddPasswordAsync(user, request.Password!);
                 if (!addpassword.Succeeded)
                     return new BaseResponse(false, "An Error Occured While Trying to Complete your Registration");
-                
+                var requesthospital = new Request { 
+                    DateRequested = DateTimeOffset.UtcNow,
+                    IsApproved = false,
+                    Documents = $";{cacInfo.Id};{nafdacInfo.Id};",
+                    UserID = user.Id,                
+                };
+                await _context.AddAsync(requesthospital, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
                 hospinfo.UserId = user.Id;
                 cacInfo.UserID = user.Id;
                 nafdacInfo.UserID = user.Id;

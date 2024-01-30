@@ -35,9 +35,9 @@ public class Request
 {
     public int Id { get; set; }
     public long UserID { get; set; }
-    public DateTime DateRequested { get; set; }
+    public DateTimeOffset DateRequested { get; set; }
     public bool IsApproved { get; set; }
-    public List<int>? Documents { get; set; }
+    public string? Documents { get; set; }
 }
 public class Document
 {

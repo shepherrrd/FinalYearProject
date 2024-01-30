@@ -6,7 +6,7 @@
     }
   },
   "ConnectionStrings": {
-    "FinalYearDB": "Host=localhost;Port=5432;Database=FinalYearProject;User Id=postgres;Password=root;"
+    "FinalYearDB": "Host=mel.db.elephantsql.com;Port=5432;Database=wwqfypjt;User Id=wwqfypjt;Password=IcsvJi5bR1CjIUXoShgcQIfN51qSGqb3;"
   },
   "JwtSettings": {
     "Secret": "FinalYear.SecretKey.For.JWT.Authentication",
