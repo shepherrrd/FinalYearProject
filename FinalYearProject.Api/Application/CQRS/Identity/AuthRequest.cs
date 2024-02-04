@@ -30,8 +30,8 @@ public class LoginRequestValidator : AbstractValidator<AuthRequest>
 public class LoginRequestHandler : IRequestHandler<AuthRequest, BaseResponse<LoginResponse>>
 {
     private readonly FinalYearDBContext _context;
-    private readonly SignInManager<DataAggregatorUser> _signinmanager;
-    private readonly UserManager<DataAggregatorUser> _usermanager;
+    private  SignInManager<DataAggregatorUser> _signinmanager;
+    private  UserManager<DataAggregatorUser> _usermanager;
     private readonly ILogger<LoginRequestHandler> _logger;
     private readonly IJwtHandler _jwtHandler;
 
@@ -53,11 +53,12 @@ public class LoginRequestHandler : IRequestHandler<AuthRequest, BaseResponse<Log
     {
         try
         {
-            var user = await _context.Users.Where(x => x.Email.ToLower() == request.Email.ToLower()).FirstOrDefaultAsync();
+            var user = await _context.Users.Where(x => x.Email.ToLower() == request.Email.ToLower()).FirstOrDefaultAsync(cancellationToken);
             if(user is null)
             {
                 return new BaseResponse<LoginResponse>(false, "A user tied to this email was not found");
             }
+           var ff = await _usermanager.CheckPasswordAsync(user, request.Password);
             using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
@@ -75,6 +76,7 @@ public class LoginRequestHandler : IRequestHandler<AuthRequest, BaseResponse<Log
                     }
                     else
                     {
+                        await _usermanager.AccessFailedAsync(user);
                         int maxAttempts = _usermanager.Options.Lockout.MaxFailedAccessAttempts;
                         int failedAttempts = user.AccessFailedCount;
                         if (maxAttempts - failedAttempts == 1)
