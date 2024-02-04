@@ -13,6 +13,11 @@ public enum UserType
     [Description("Research Center")]
     ResearchCenter
 }
+public enum MedicalRecordTypeEnum
+{
+    [Description("Health")]
+    Health =1
+}
 public enum OtpCodeStatusEnum
 {
     [Description("Sent")]

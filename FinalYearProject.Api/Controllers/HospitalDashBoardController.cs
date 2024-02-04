@@ -9,11 +9,12 @@ namespace FinalYearProject.Api.Controllers
 {
     [Route("api/[controller]")]
     [Authorize]
+    [AuthorizeUserFilter(AuthorizationPolicyCodes.UserPolicyCode)]
     [ApiController]
-    public class DashBoardController : ControllerBase
+    public class HospitalDashBoardController : ControllerBase
     {
         private readonly ISender _sender;
-        public DashBoardController(ISender sender) => _sender = sender;
+        public HospitalDashBoardController(ISender sender) => _sender = sender;
 
         [HttpGet("GetRequests")]
         public async Task<IActionResult> GetRequests() {

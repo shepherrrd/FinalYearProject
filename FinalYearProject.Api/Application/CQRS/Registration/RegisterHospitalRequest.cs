@@ -13,6 +13,7 @@ namespace FinalYearProject.Api.Application.CQRS.Registration;
 
 public class RegisterHospitalRequest : IRequest<BaseResponse>
 {
+#nullable disable
     public string? Location { get; set; }
     public string? HospitalName { get; set; }
     public string? HospitalEmail { get; set; }
@@ -179,7 +180,7 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
                 {
                     return new BaseResponse(false, sendemail.Message!);
                 }
-                var addpassword = await _usermanager.AddPasswordAsync(user, request.Password!);
+                var addpassword = await _usermanager.AddPasswordAsync(user, request.Password);
                 if (!addpassword.Succeeded)
                     return new BaseResponse(false, "An Error Occured While Trying to Complete your Registration");
                 var requesthospital = new Request { 

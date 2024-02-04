@@ -9,6 +9,10 @@ using FinalYearProject.Infrastructure.Infrastructure.Auth;
 using FinalYearProject.Infrastructure.Infrastructure.Utilities.DataExtension;
 using FinalYearProject.Infrastructure.Infrastructure.Persistence;
 using FinalYearProject.Infrastructure.Infrastructure.Services.Interfaces;
+using FinalYearProject.Infrastructure.Data.Entities;
+using CsvHelper;
+using System.Globalization;
+using Newtonsoft.Json;
 
 namespace Payultra.Infrastructure.Services.Implementations
 {
@@ -95,6 +99,48 @@ namespace Payultra.Infrastructure.Services.Implementations
                 }
             }
             return response;
+        }
+
+        public BaseResponse<string> VerifySdtmDatasetFormat(IFormFile file)
+        {
+            using (var reader = new StreamReader(file.OpenReadStream()))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                csv.Read();
+                csv.ReadHeader();
+                var headers = csv.Context.Reader.HeaderRecord;
+
+                var requiredHeaders = new[] { "USUBJID", "SEX", "AGE", "TRTGROUP", "HEIGHT", "WEIGHT" };
+                var result = requiredHeaders.All(header => headers.Contains(header));
+                var records = "";
+                if (result)
+                {
+                    var sdrecords = csv.GetRecords<SDTMDataset>().ToList();
+                    records = JsonConvert.SerializeObject(sdrecords);
+                }                     
+                return new BaseResponse<string>(result, "Validation done", records);
+            }
+        }
+
+        public BaseResponse<string> VerifyICDDatasetFormat(IFormFile file)
+        {
+            using (var reader = new StreamReader(file.OpenReadStream()))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                csv.Read();
+                csv.ReadHeader();
+                var headers = csv.Context.Reader.HeaderRecord;
+
+                var requiredHeaders = new[] { "Patient_ID", "Diagnosis_Code", "Diagnosis_Description" };
+                var result = requiredHeaders.All(header => headers.Contains(header));
+                var records = "";
+                if (result)
+                {
+                    var sdrecords = csv.GetRecords<SDTMDataset>().ToList();
+                    records = JsonConvert.SerializeObject(sdrecords);
+                }
+                return new BaseResponse<string>(result, "Validation done", records);
+            }
         }
     }
 }
