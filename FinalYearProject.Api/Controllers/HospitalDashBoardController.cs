@@ -43,5 +43,16 @@ namespace FinalYearProject.Api.Controllers
                 return BadRequest(response);
             return Ok(response);
         }
+
+        [HttpPost("UploadData")]
+
+        public async Task<IActionResult> UploadData([FromForm] UploadMedicalDataRequest request)
+        {
+            request.HospitalId = User?.Identity?.GetProfileId() ?? 0;
+            var response = await _sender.Send(request);
+            if (!response.Status)
+                return BadRequest();
+            return Ok(response);
+        }
     }
 }

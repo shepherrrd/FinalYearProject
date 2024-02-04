@@ -60,7 +60,7 @@ public class UploadMedicalDataRequestHandler : IRequestHandler<UploadMedicalData
             }
             var validateSDTM = _utility.VerifySdtmDatasetFormat(request.SDTMDATA);
             var validateICD = _utility.VerifyICDDatasetFormat(request.ICDDATA);
-            if (!validateSDTM.Status || validateICD.Status)
+            if (!validateSDTM.Status || !validateICD.Status)
             {
                 return new BaseResponse(false, "Invalid Dataset Format");
             }
