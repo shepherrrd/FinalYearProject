@@ -7,7 +7,6 @@ namespace FinalYearProject.Infrastructure.Infrastructure.Auth
     {
         public static long GetProfileId(this IIdentity identity)
         {
-            //return long.Parse(GetClaimValue(identity, ClaimTypes.NameIdentifier));
             long.TryParse(GetClaimValue(identity, ClaimTypes.NameIdentifier), out long profileId);
             return profileId;
         }
@@ -26,11 +25,6 @@ namespace FinalYearProject.Infrastructure.Infrastructure.Auth
         {
             _ = int.TryParse(GetClaimValue(identity, "UserType"), out int userType);
             return userType;
-        }
-
-        public static bool GetKycStatus(this IIdentity identity)
-        {
-            return GetClaimValue(identity, "IsKycVerified") == "true";
         }
         
         public static int GetAccountStatus(this IIdentity identity)
