@@ -99,7 +99,6 @@ namespace FinalYearProject.Infrastructure.Infrastructure.Services.Implementation
             if (!emailBodyResponse.Status)
             {
                 _logger?.LogInformation($"AccountService => Sending OTP to {request.Recipient} failed");
-                //return new BaseResponse<OtpRequestResult>(false, $"{emailBodyResponse.Message}");
             }
             else
             {

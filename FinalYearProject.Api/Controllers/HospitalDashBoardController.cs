@@ -51,7 +51,7 @@ namespace FinalYearProject.Api.Controllers
             request.HospitalId = User?.Identity?.GetProfileId() ?? 0;
             var response = await _sender.Send(request);
             if (!response.Status)
-                return BadRequest();
+                return BadRequest(response);
             return Ok(response);
         }
     }
