@@ -125,6 +125,9 @@ public class LoginRequestHandler : IRequestHandler<AuthRequest, BaseResponse<Log
                     UserType = user.UserType,
                     AccountStatus = user.AccountStatus,
                     ProfileCode = AuthorizationPolicyCodes.UserPolicyCode,
+                    Privileges = user.UserType == UserType.Admin ? AuthorizationPolicyCodes.BackofficeUserPolicyCode : AuthorizationPolicyCodes.UserPolicyCode,
+                    RoleId = user.UserType == UserType.Admin ? 4:7 ,
+                    RoleText = user.UserType == UserType.Admin ? "Admin" : "User"
                 });
                 await transaction.CommitAsync(cancellationToken);
                 return new BaseResponse<LoginResponse>(true, "Signin Successfull", loginResponse);

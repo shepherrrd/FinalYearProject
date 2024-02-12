@@ -15,11 +15,9 @@ namespace FinalYearProject.Infrastructure.Infrastructure.Auth
     public class BackOfficePrivileges
     {
         public const string Users = "Users";
-        public const string ActivityLogs = "ActivityLogs";
         public const string Dashboards = "Dashboard";
 
         public string User { get; private set; } = Users;
-        public string ActivityLog { get; private set; } = ActivityLogs;
         public string Dashboard { get; private set; } = Dashboards;
     }
 }

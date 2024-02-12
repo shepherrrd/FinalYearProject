@@ -100,13 +100,6 @@ public  static class Extensions {
 
         #region User Claims
         modelBuilder.Entity<IdentityUserClaim<long>>().HasData(
-            new IdentityUserClaim<long>
-            {
-                ClaimType = BackOfficePrivileges.ActivityLogs,
-                ClaimValue = BackOfficePrivileges.ActivityLogs,
-                Id = 1,
-                UserId = 1
-            },
             
             new IdentityUserClaim<long>
             {
