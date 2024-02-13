@@ -14,7 +14,7 @@ public class UploadMedicalDataRequest : IRequest<BaseResponse>
     internal long HospitalId { get; set; }
     public IFormFile SDTMDATA {  get; set; } 
     public IFormFile ICDDATA {  get; set; }
-    public List<MedicalRecordTypeEnum> medicalRecordTypes { get; set; }
+    public MedicalRecordTypeEnum medicalRecordTypes { get; set; }
     public string PublicKey { get; set; }
 }
 
