@@ -15,6 +15,7 @@ public class UploadMedicalDataRequest : IRequest<BaseResponse>
     public IFormFile SDTMDATA {  get; set; } 
     public IFormFile ICDDATA {  get; set; }
     public List<MedicalRecordTypeEnum> medicalRecordTypes { get; set; }
+    public string PublicKey { get; set; }
 }
 
 public class UploadMedicalDataRequestValidator : AbstractValidator<UploadMedicalDataRequest>
@@ -41,12 +42,15 @@ public class UploadMedicalDataRequestHandler : IRequestHandler<UploadMedicalData
 {
     private readonly IUtilityService _utility;
     private readonly FinalYearDBContext _context;
-
+    private readonly IEncryptionService _encryption;
     public UploadMedicalDataRequestHandler(IUtilityService utility,
-        FinalYearDBContext context)
+        FinalYearDBContext context,
+        IEncryptionService encryption
+        )
     {
         _utility = utility;
         _context = context;
+        _encryption = encryption;
     }
 
     public async Task<BaseResponse> Handle(UploadMedicalDataRequest request, CancellationToken cancellationToken)
@@ -64,12 +68,13 @@ public class UploadMedicalDataRequestHandler : IRequestHandler<UploadMedicalData
             {
                 return new BaseResponse(false, "Invalid Dataset Format");
             }
-
+            var ICDBytes = _encryption.EncryptDataAsync(validateICD.Data, request.PublicKey);
+            var SDTMBYTES = _encryption.EncryptDataAsync(validateSDTM.Data, request.PublicKey);
             var medicalRecord = new MedicalDataRecords
             {
                 HospitalId = user.Id,
-                ICDRecord = validateICD.Data,
-                SDTMRecord = validateSDTM.Data,
+                ICDRecordBytes = ICDBytes.Data,
+                SDTMRecordBytes = SDTMBYTES.Data,
                 RecordType = request.medicalRecordTypes,
                 TimeCreated = DateTimeOffset.UtcNow,
                 TimeUpdated = DateTimeOffset.UtcNow,

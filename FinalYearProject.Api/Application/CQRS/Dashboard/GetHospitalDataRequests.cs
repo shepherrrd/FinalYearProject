@@ -51,7 +51,7 @@ public class GetHospitalDataRequestsHandler : IRequestHandler<GetHospitalDataReq
                 .FirstOrDefaultAsync(cancellationToken);
 
             var passports = await _context.ResearchCenterInfo.AsNoTracking()
-                .Where(researchInfo => researchInfo.ID == research.ResearchCenterInfo)
+                .Where(researchInfo => researchInfo.ID == research!.ResearchCenterInfo)
                 .Select(joinedItem => joinedItem.PassportID)
                 .FirstOrDefaultAsync(cancellationToken);
 

@@ -160,8 +160,8 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
                     TimeUpdated = DateTime.UtcNow,
                     NormalizedEmail = request.HospitalEmail!.ToUpperInvariant(),
                     NormalizedUserName = request.HospitalEmail!.ToUpperInvariant(),
-                    UserName = request.HospitalEmail.ToLower()!
-
+                    UserName = request.HospitalEmail.ToLower()!,
+                    signupsessionkey = Guid.NewGuid().ToString(),
                 };
                
                 await _context.AddAsync(user, cancellationToken);

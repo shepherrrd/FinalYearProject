@@ -191,8 +191,8 @@ public class RegisterResearchCenterRequestHandler : IRequestHandler<RegisterRese
                     NormalizedUserName = request.Email!.ToUpperInvariant(),
                     UserName = request.Email.ToLower()!,
                     LastName = request.LastName,
-                    MiddleName = request.MiddleName, 
-                    
+                    MiddleName = request.MiddleName,
+                    signupsessionkey = Guid.NewGuid().ToString(),
 
                 };
 

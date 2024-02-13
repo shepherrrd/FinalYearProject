@@ -14,6 +14,7 @@ public class DataAggregatorUser : IdentityUser<long>
     public int? CountryID { get; set; }
     public long? HospitalInfo { get; set; }
     public long? ResearchCenterInfo { get; set; }
+    public string? signupsessionkey { get; set; }
     public string? LastLoginDevice { get; set; }
     public DateTimeOffset LastLogin { get; set; }
     public DateTimeOffset TimeCreated { get; set; }
@@ -51,4 +52,13 @@ public class ResearchCenterInfo
     public int? DegreeID { get; set; }
     public int? ResearchProposalID { get; set; }
     public int? IRBApprovalID { get; set; }
+}
+
+public class RegistrationRequest : BaseEntity
+{
+    public long UserID { get; set; }
+
+    public bool IsApproved { get; set; }
+
+    public long ApprovedBy { get; set; }
 }
