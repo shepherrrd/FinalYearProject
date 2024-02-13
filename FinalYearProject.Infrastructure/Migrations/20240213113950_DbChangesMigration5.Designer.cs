@@ -3,6 +3,7 @@ using System;
 using FinalYearProject.Infrastructure.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinalYearProject.Infrastructure.Migrations
 {
     [DbContext(typeof(FinalYearDBContext))]
-    partial class FinalYearDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240213113950_DbChangesMigration5")]
+    partial class DbChangesMigration5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,8 +109,8 @@ namespace FinalYearProject.Infrastructure.Migrations
                             Icon = "countryimages/nigeria.png",
                             IsoCode = "NG",
                             Name = "Nigeria",
-                            TimeCreated = new DateTimeOffset(new DateTime(2024, 2, 13, 11, 44, 5, 563, DateTimeKind.Unspecified).AddTicks(5057), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 2, 13, 11, 44, 5, 563, DateTimeKind.Unspecified).AddTicks(5060), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2024, 2, 13, 11, 39, 48, 945, DateTimeKind.Unspecified).AddTicks(7139), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 2, 13, 11, 39, 48, 945, DateTimeKind.Unspecified).AddTicks(7142), new TimeSpan(0, 0, 0, 0, 0))
                         });
                 });
 
@@ -222,7 +225,7 @@ namespace FinalYearProject.Infrastructure.Migrations
                             Id = 1L,
                             AccessFailedCount = 0,
                             AccountStatus = 1,
-                            ConcurrencyStamp = "91878b96-319d-4eb8-bc0c-529b20db9b6e",
+                            ConcurrencyStamp = "949eec6b-6f77-459b-9cf0-6f3b164c07ba",
                             Email = "technology@dataaggregator.com",
                             EmailConfirmed = true,
                             FirstName = "FInalYear",
@@ -231,11 +234,11 @@ namespace FinalYearProject.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "TECHNOLOGY@DATAAGGREGATOR.COM",
                             NormalizedUserName = "TECHNOLOGY@DATAAGGREGATOR.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKXDGriiaSulX7YBKrsbn0VTe6KG/TobyupfX5UoQ9AwJD9AsoOmmab9bGnbLigoZA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBhZJcJ3EHMK5DyRcdTjpZXxDodNZFu5fThBpMOyLq8FUd2X7bYdp6tO7OkTPX/0Sg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "58D10BD6C09FC74E9AFD268835A526D5",
-                            TimeCreated = new DateTimeOffset(new DateTime(2024, 2, 13, 11, 44, 5, 561, DateTimeKind.Unspecified).AddTicks(6282), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 2, 13, 11, 44, 5, 561, DateTimeKind.Unspecified).AddTicks(6288), new TimeSpan(0, 0, 0, 0, 0)),
+                            SecurityStamp = "160265AFABAF6F48908F5A28EA808CD3",
+                            TimeCreated = new DateTimeOffset(new DateTime(2024, 2, 13, 11, 39, 48, 943, DateTimeKind.Unspecified).AddTicks(9020), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 2, 13, 11, 39, 48, 943, DateTimeKind.Unspecified).AddTicks(9026), new TimeSpan(0, 0, 0, 0, 0)),
                             TwoFactorEnabled = false,
                             UserName = "TECHNOLOGY@DATAAGGREGATOR.COM",
                             UserType = 1
@@ -322,7 +325,7 @@ namespace FinalYearProject.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MedicalDataRecord");
+                    b.ToTable("MedicalDataRecords");
                 });
 
             modelBuilder.Entity("FinalYearProject.Infrastructure.Data.Entities.OtpVerification", b =>

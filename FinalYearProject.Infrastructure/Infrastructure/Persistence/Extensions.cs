@@ -28,6 +28,7 @@ public  static class Extensions {
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<ISendGridService, SendGridService>();
         services.AddScoped<IUtilityService, UtilityService>();
+        services.AddScoped<IEncryptionService, EncryptionService>();
 
         return services;
         }

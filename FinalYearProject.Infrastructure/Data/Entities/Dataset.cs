@@ -24,8 +24,8 @@ public class MedicalDataRecords : BaseEntity
     
     public List<MedicalRecordTypeEnum>? RecordType { get; set; }
 
-    public string SDTMRecord { get; set; } = default!;
-    public string ICDRecord { get; set; } = default!;
+    public byte[] SDTMRecordBytes { get; set; } = default!;
+    public byte[] ICDRecordBytes { get; set; } = default!;
 
 }
 
@@ -41,13 +41,14 @@ public class ResearchCenter
     public string? Name { get; set; }
     public string? Location { get; set; }
 }
-public class Request
+public class Request : BaseEntity
 {
-    public int Id { get; set; }
     public long UserID { get; set; }
     public DateTimeOffset DateRequested { get; set; }
     public bool IsApproved { get; set; }
+    public UserType UserType { get; set; }
     public string? Documents { get; set; }
+
 }
 public class Document
 {

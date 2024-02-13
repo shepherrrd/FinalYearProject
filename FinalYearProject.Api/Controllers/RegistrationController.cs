@@ -45,5 +45,15 @@ namespace FinalYearProject.Api.Controllers
                 return BadRequest(response);
             return Ok(response);
         }
+
+        [HttpPatch("VerifyAccount")]
+
+        public async Task<IActionResult> VerifyAccount([FromBody] VerifyAccountOtpRequest request)
+        {
+            var response = await _sender.Send(request);
+            if(!response.Status)
+                return BadRequest(response);
+            return Ok(response);
+        }
     }
 }
