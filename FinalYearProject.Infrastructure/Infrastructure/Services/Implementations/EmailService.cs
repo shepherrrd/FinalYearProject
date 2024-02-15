@@ -161,12 +161,12 @@ namespace FinalYearProject.Infrastructure.Services.Implementations
                     break;
 
                 case EmailTitleEnum.WELCOME:
-                    fileName = "welcome.html";
+                    fileName = "welcomehospitaluser.html";
                     templateFile = await GetTemplateFileAsync(emailFolderName, fileName);
                     if (!string.IsNullOrWhiteSpace(templateFile))
                         response.HtmlBody = templateFile;
 
-                    plainFilename = "welcome.txt";
+                    plainFilename = "welcomehospitaluser.txt";
                     plainTextFile = await GetTemplateFileAsync(plaintTextFolderName, plainFilename);
                     if (!string.IsNullOrWhiteSpace(plainTextFile))
                         response.PlainBody = plainTextFile;

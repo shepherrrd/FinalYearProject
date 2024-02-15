@@ -4,6 +4,7 @@ using FinalYearProject.Infrastructure.Infrastructure.Persistence;
 using FinalYearProject.Infrastructure.Infrastructure.Services.Interfaces;
 using FinalYearProject.Infrastructure.Infrastructure.Utilities.Enums;
 using FinalYearProject.Infrastructure.Services.Interfaces;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -122,7 +123,33 @@ namespace FinalYearProject.Infrastructure.Infrastructure.Services.Implementation
             }
         }
 
-       
+       public async Task<BaseResponse> SendHospitalWelcomeEmailAsync(SendHospitalKeysRequest request, CancellationToken cancellationToken)
+    {
+        var emailBodyRequest = new EmailBodyRequest { Email = request.Email, FirstName = request.FirstName,EmailTitle = EmailTitleEnum.WELCOME };
+        var emailBodyResponse = await _emailService.GetEmailBody(emailBodyRequest);
+        var emailBody = emailBodyResponse.Data;
+        if(!emailBodyResponse.Status)
+            return new BaseResponse(false,emailBodyResponse.Message!);
+        string? htmlEmailBody = emailBody!.HtmlBody;
+        string? plainEmailBody = emailBody.PlainBody;
+        htmlEmailBody?.Replace("[[PUBKEY]]", request.PublicKey);
+        htmlEmailBody?.Replace("[[PRIVKEY]]", request.PrivateKey);
+
+        plainEmailBody?.Replace("[[PUBKEY]]", request.PublicKey);
+        plainEmailBody?.Replace("[[PRIVKEY]]", request.PrivateKey);
+
+        await _emailService.SendEmailAsync(new SingleEmailRequest
+        {
+            RecipientEmailAddress = request.Email,
+            RecipientName = request.FirstName,
+            EmailSubject = $"Keys for Documents",
+            HtmlEmailBody = htmlEmailBody,
+            PlainEmailBody = plainEmailBody
+        });
+
+        return new BaseResponse(true, "Sent");
+
+    }
 
         public async Task<BaseResponse> ValidateOTPCodeAsync(ValidateOtpRequest otpRequest, CancellationToken cancellationToken)
         {
