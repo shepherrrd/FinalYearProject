@@ -11,7 +11,7 @@ using System.Dynamic;
 
 namespace FinalYearProject.Api.Application.CQRS.Registration;
 
-public class RegisterResearchCenterRequest : IRequest<BaseResponse>
+public class RegisterResearchCenterRequest : IRequest<BaseResponse<string>>
 {
 #nullable disable
     public UserType AccountType { get; set; } // Assuming AccountType is an enum or class
@@ -77,7 +77,7 @@ public class RegisterResearchCenterRequestValidator : AbstractValidator<Register
     }
 }
 
-public class RegisterResearchCenterRequestHandler : IRequestHandler<RegisterResearchCenterRequest, BaseResponse>
+public class RegisterResearchCenterRequestHandler : IRequestHandler<RegisterResearchCenterRequest, BaseResponse<string>>
 {
     private readonly FinalYearDBContext _context;
     private readonly ILogger<RegisterResearchCenterRequestHandler> _logger;
@@ -97,7 +97,7 @@ public class RegisterResearchCenterRequestHandler : IRequestHandler<RegisterRese
         _usermanager = usermanager;
         _account = account;
     }
-    public async Task<BaseResponse> Handle(RegisterResearchCenterRequest request, CancellationToken cancellationToken)
+    public async Task<BaseResponse<string>> Handle(RegisterResearchCenterRequest request, CancellationToken cancellationToken)
     {
         try
         {
@@ -108,7 +108,7 @@ public class RegisterResearchCenterRequestHandler : IRequestHandler<RegisterRese
                 if (existinguser is not null)
                 {
                     _logger.LogInformation($"REGISTER_HOSPITAL_REQUEST =>  User with email {request.Email} was taken");
-                    return new BaseResponse(false, "This Email Already Exisits");
+                    return new BaseResponse<string>(false, "This Email Already Exisits");
                 }
 
                 var passportmemoryStream = new MemoryStream();
@@ -134,7 +134,7 @@ public class RegisterResearchCenterRequestHandler : IRequestHandler<RegisterRese
 
                 if (!passport.Status || !degree.Status || !research.Status || !irbapproval.Status)
                 {
-                    return new BaseResponse(false, "An Error Occured WHile Processing Documents Please Contact Support After Many Tries");
+                    return new BaseResponse<string>(false, "An Error Occured WHile Processing Documents Please Contact Support After Many Tries");
                 }
                 var passportinfo = new Document
                 {
@@ -210,11 +210,11 @@ public class RegisterResearchCenterRequestHandler : IRequestHandler<RegisterRese
                 }, cancellationToken);
                 if (!sendemail.Status)
                 {
-                    return new BaseResponse(false, sendemail.Message!);
+                    return new BaseResponse<string>(false, sendemail.Message!);
                 }
                 var addpassword = await _usermanager.AddPasswordAsync(user, request.Password!);
                 if (!addpassword.Succeeded)
-                    return new BaseResponse(false, "An Error Occured While Trying to Complete your Registration");
+                    return new BaseResponse<string>(false, "An Error Occured While Trying to Complete your Registration");
                 var requesResearchCenter = new Request
                 {
                     DateRequested = DateTimeOffset.UtcNow,
@@ -233,19 +233,19 @@ public class RegisterResearchCenterRequestHandler : IRequestHandler<RegisterRese
                 _context.UpdateRange(degreeinfo, passportinfo, irbapprovalinfo,researchcenter,researchproposalinfo);
                 await _context.SaveChangesAsync(cancellationToken);
                await transanction.CommitAsync(cancellationToken);
-                return new BaseResponse(true, "Registration Successfull");
+                return new BaseResponse<string>(true, "Registration Successfull",user.signupsessionkey);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"REGISTER_HOSPITAL_REQUEST =>something went wrong ");
                 await transanction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                return new BaseResponse(false, "An Error Occured While Trying To COmplete Your Registration"); ;
+                return new BaseResponse<string>(false, "An Error Occured While Trying To COmplete Your Registration"); ;
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, $"REGISTER_HOSPITAL_REQUEST =>something went wrong ");
-            return new BaseResponse(false, "An Error Occured While Trying To COmplete Your Registration"); ;
+            return new BaseResponse<string>s(false, "An Error Occured While Trying To COmplete Your Registration"); ;
         }
     }
 }

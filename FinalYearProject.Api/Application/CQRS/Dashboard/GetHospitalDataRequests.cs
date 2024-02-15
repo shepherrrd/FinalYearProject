@@ -29,7 +29,7 @@ public class GetHospitalDataRequestsHandler : IRequestHandler<GetHospitalDataReq
             .FirstOrDefaultAsync(cancellationToken);
 
         if (hospital is null)
-            return new BaseResponse<IEnumerable<RequestResponse>>(false, "The Hospital assigned to this Id was not found", null);
+            return new BaseResponse<IEnumerable<RequestResponse>>(false, "The Hospital assigned to this Id was not found");
 
         var response = new List<RequestResponse>();
 

@@ -26,6 +26,7 @@ namespace FinalYearProject.Api.Controllers
 
         [HttpGet]
         [Authorize]
+        [AuthorizeUserFilter(policies: AuthorizationPolicyCodes.UserPolicyCode)]
         public async Task<IActionResult> ping()
         {
             return Ok(User?.Identity?.GetProfileId() ?? 0);
