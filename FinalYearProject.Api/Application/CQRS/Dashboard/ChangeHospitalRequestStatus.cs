@@ -40,7 +40,7 @@ public class ChangeHospitalRequestStatusHandler : IRequestHandler<ChangeHospital
             //TODO send email
             return new BaseResponse(true, "Request Changed Successfully");
         }
-        catch (Exception es)
+        catch (Exception ex)
         {
 
             return new BaseResponse(false, "Something went wrong while trying to update the request , please try again");
