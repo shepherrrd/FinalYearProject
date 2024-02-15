@@ -68,6 +68,14 @@ public class SendOTPRequest
     public OtpRecipientTypeEnum RecipientType { get; set; }
     public OtpVerificationPurposeEnum Purpose { get; set; }
 }
+public class SendHospitalKeysRequest
+{
+    public long UserId { get; set; } 
+    public string? FirstName { get; set; }
+    public string? Email { get; set; }
+    public string? PrivateKey { get; set; }
+    public string? PublicKey { get; set; }
+}
 
 public class OtpRequestResult
 {
