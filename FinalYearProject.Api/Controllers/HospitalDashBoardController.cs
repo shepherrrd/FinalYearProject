@@ -1,4 +1,4 @@
-﻿using FinalYearProject.Api.Application.CQRS.Dashboard;
+﻿using FinalYearProject.Api.Application.CQRS.Dashboard.Hospital;
 using FinalYearProject.Infrastructure.Infrastructure.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -25,20 +25,22 @@ namespace FinalYearProject.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPatch("ApproveRequest/:id")]
-        public async Task<IActionResult> AprroveRequest([FromRoute] int id)
+        [HttpPatch("ApproveRequest")]
+        public async Task<IActionResult> AprroveRequest([FromBody] ChangeMedicalDataRequest request)
         {
-            var UserId = User?.Identity?.GetProfileId() ?? 0;
-            var response = await _sender.Send(new ChangeHospitalRequestStatus { HospitalId= UserId,IsApproved= true,RequestId = id });
+            request.UserId = User?.Identity?.GetProfileId() ?? 0;
+            request.IsApproved = true;
+            var response = await _sender.Send(request);
             if (!response.Status)
                 return BadRequest(response);
             return Ok(response);
         }
-        [HttpPatch("RejectRequest/:id")]
-        public async Task<IActionResult> RejectRequest([FromRoute] int id)
+        [HttpPatch("RejectRequest")]
+        public async Task<IActionResult> RejectRequest([FromBody] ChangeMedicalDataRequest request)
         {
-            var UserId = User?.Identity?.GetProfileId() ?? 0;
-            var response = await _sender.Send(new ChangeHospitalRequestStatus { HospitalId= UserId,IsApproved= false,RequestId = id });
+            request.UserId = User?.Identity?.GetProfileId() ?? 0;
+            request.IsApproved = false;
+            var response = await _sender.Send(request);
             if (!response.Status)
                 return BadRequest(response);
             return Ok(response);

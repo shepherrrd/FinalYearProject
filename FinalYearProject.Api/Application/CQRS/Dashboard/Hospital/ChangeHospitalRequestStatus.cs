@@ -4,7 +4,7 @@ using FinalYearProject.Infrastructure.Infrastructure.Utilities.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinalYearProject.Api.Application.CQRS.Dashboard;
+namespace FinalYearProject.Api.Application.CQRS.Dashboard.Hospital;
 
 public class ChangeHospitalRequestStatus : IRequest<BaseResponse>
 {
@@ -45,6 +45,6 @@ public class ChangeHospitalRequestStatusHandler : IRequestHandler<ChangeHospital
 
             return new BaseResponse(false, "Something went wrong while trying to update the request , please try again");
         }
-       
+
     }
 }
