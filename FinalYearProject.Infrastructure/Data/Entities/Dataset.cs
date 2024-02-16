@@ -22,7 +22,7 @@ public class MedicalDataRecords : BaseEntity
 {
     public long HospitalId {  get; set; }
     
-    public List<MedicalRecordTypeEnum>? RecordType { get; set; }
+    public MedicalRecordTypeEnum RecordType { get; set; }
 
     public byte[] SDTMRecordBytes { get; set; } = default!;
     public byte[] ICDRecordBytes { get; set; } = default!;

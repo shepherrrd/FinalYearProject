@@ -6,14 +6,14 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinalYearProject.Api.Application.CQRS.Dashboard;
+namespace FinalYearProject.Api.Application.CQRS.Dashboard.Hospital;
 
 public class UploadMedicalDataRequest : IRequest<BaseResponse>
 {
 #nullable disable
     internal long HospitalId { get; set; }
-    public IFormFile SDTMDATA {  get; set; } 
-    public IFormFile ICDDATA {  get; set; }
+    public IFormFile SDTMDATA { get; set; }
+    public IFormFile ICDDATA { get; set; }
     public MedicalRecordTypeEnum medicalRecordTypes { get; set; }
     public string PublicKey { get; set; }
 }
@@ -23,15 +23,15 @@ public class UploadMedicalDataRequestValidator : AbstractValidator<UploadMedical
     public UploadMedicalDataRequestValidator()
     {
         RuleFor(x => x.SDTMDATA).NotEmpty().NotNull();
-       RuleFor(x => x.SDTMDATA).Must(x => x.FileName.EndsWith(".csv"))
-            .WithMessage("The file must be a CSV file.");
+        RuleFor(x => x.SDTMDATA).Must(x => x.FileName.EndsWith(".csv"))
+             .WithMessage("The file must be a CSV file.");
         RuleFor(x => x.SDTMDATA.ContentType)
             .Equal("text/csv")
             .WithMessage("The file content type must be 'text/csv'.");
 
         RuleFor(x => x.ICDDATA).NotEmpty().NotNull();
-       RuleFor(x => x.ICDDATA).Must(x => x.FileName.EndsWith(".csv"))
-            .WithMessage("The file must be a CSV file.");
+        RuleFor(x => x.ICDDATA).Must(x => x.FileName.EndsWith(".csv"))
+             .WithMessage("The file must be a CSV file.");
         RuleFor(x => x.ICDDATA.ContentType)
             .Equal("text/csv")
             .WithMessage("The file content type must be 'text/csv'.");
@@ -83,10 +83,10 @@ public class UploadMedicalDataRequestHandler : IRequestHandler<UploadMedicalData
             await _context.SaveChangesAsync(cancellationToken);
             return new BaseResponse(true, "Records Added Successfully");
         }
-        catch (Exception )
+        catch (Exception)
         {
             return new BaseResponse(false, "An Error Occured While trying to upload new records");
         }
-        
+
     }
 }
