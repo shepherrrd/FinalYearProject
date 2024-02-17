@@ -46,7 +46,7 @@ namespace FinalYearProject.Infrastructure.Services.Implementations
 
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Get, $"https://verifier.meetchopra.com/verify/{email}?token=f44ee426cf3d59d9f037c7e7448a4b7b22b275c67525f00a206d6ff992e2947f");
+                var request = new HttpRequestMessage(HttpMethod.Get, $"https://verifier.meetchopra.com/verify/{email}?token=2b1e810090b21cab8a8753ec6bd1f091ebd1d9dd6b6ddbfea9e9b45c1b55757fba354cbe95a14fcad448107ae138e450");
 
                 var client = _clientFactory.CreateClient();
                 var response = await client.SendAsync(request);
