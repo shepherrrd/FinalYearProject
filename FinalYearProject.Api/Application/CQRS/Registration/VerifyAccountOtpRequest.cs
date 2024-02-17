@@ -40,14 +40,14 @@ public class VerifyAccountOtpRequestHandler : IRequestHandler<VerifyAccountOtpRe
 
     public async Task<BaseResponse> Handle(VerifyAccountOtpRequest request, CancellationToken cancellationToken)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(x => x.signupsessionkey == request.signupsessionkey);
+        var user = await _context.Users.FirstOrDefaultAsync(x => x.signupsessionkey == request.signupsessionkey,cancellationToken);
         if (user is null)
         {
             return new BaseResponse(false, "No User was found");
         }
         var validateotp = await _accountService.ValidateOTPCodeAsync(new ValidateOtpRequest
         {
-            Code = request.signupsessionkey,
+            Code = request.Code,
             Purpose = OtpVerificationPurposeEnum.EmailConfirmation,
             UserId = user.Id
         },cancellationToken);
