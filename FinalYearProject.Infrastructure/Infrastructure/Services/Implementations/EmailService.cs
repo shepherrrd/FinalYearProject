@@ -14,7 +14,6 @@ namespace FinalYearProject.Infrastructure.Services.Implementations
     public class EmailService : IEmailService
     {
         private readonly IWebHostEnvironment _hostEnvironment;
-        //private readonly IHostingEnvironment _hostEnvironment;
         private readonly IHttpClientFactory _clientFactory;
         private readonly ISendGridService _sendGridService;
         private readonly ILogger<EmailService> _logger;
@@ -110,21 +109,6 @@ namespace FinalYearProject.Infrastructure.Services.Implementations
 
             return new BaseResponse(response.Status, response.Message!);
         }
-
-        //public async Task<BaseResponse> SendSmsAsync(SingleSMSRequest request)
-        //{
-        //    _logger?.LogInformation($"EMAIL_SERVICE => Sending sms to {request.RecipientPhoneNo}");
-        //    //var response = await _sendGrid.SendEmail(new SingleEmailRequest
-        //    var response = await _sendGridService.SendSMS(new SingleSMSRequest
-        //    {
-        //        RecipientPhoneNo = request.RecipientPhoneNo,
-        //        RecipientName = request.RecipientName,
-        //        SmsSubject = request.SmsSubject,
-        //        SmsBody = request.SmsBody
-        //    });
-
-        //    return new BaseResponse(response.Status, response.Message);
-        //}
 
         public async Task<BaseResponse<EmailBodyResponse>> GetEmailBody(EmailBodyRequest request)
         {

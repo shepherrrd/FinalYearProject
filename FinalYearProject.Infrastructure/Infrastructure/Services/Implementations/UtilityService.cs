@@ -84,22 +84,7 @@ namespace Payultra.Infrastructure.Services.Implementations
 
         
 
-        public IEnumerable<string> GetAllPrivileges()
-        {
-            var response = new List<string>();
-
-            var privilegesClass = new BackOfficePrivileges().GetType().GetProperties();
-            if (privilegesClass.IsAny())
-            {
-                foreach (var privilege in privilegesClass)
-                {
-                    string vv = privilege.GetValue(new BackOfficePrivileges())?.ToString() ?? "";
-                    if (!string.IsNullOrWhiteSpace(vv))
-                        response.Add(vv);
-                }
-            }
-            return response;
-        }
+        
 
         public BaseResponse<string> VerifySdtmDatasetFormat(IFormFile file)
         {

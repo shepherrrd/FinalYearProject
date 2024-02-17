@@ -3,6 +3,7 @@ using FinalYearProject.Infrastructure.Data.Models;
 using FinalYearProject.Infrastructure.Infrastructure.Persistence;
 using FinalYearProject.Infrastructure.Infrastructure.Services.Interfaces;
 using FinalYearProject.Infrastructure.Infrastructure.Utilities.Enums;
+using FinalYearProject.Infrastructure.Services.Implementations;
 using FinalYearProject.Infrastructure.Services.Interfaces;
 using FluentValidation;
 using MediatR;
@@ -74,11 +75,13 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
     private ICloudinaryService _cloudinary;
     private UserManager<DataAggregatorUser> _usermanager;
     private readonly IAccountService _account;
+    private readonly IEmailService _emailService;
     public RegisterHospitalRequestHandler(FinalYearDBContext context,
         ILogger<RegisterHospitalRequestHandler> logger,
         ICloudinaryService cloudinary,
         UserManager<DataAggregatorUser> usermanager,
-        IAccountService account
+        IAccountService account,
+        IEmailService emailService
         )
     {
         _context = context;
@@ -86,6 +89,7 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
         _cloudinary = cloudinary;
         _usermanager = usermanager;
         _account = account;
+        _emailService = emailService;
     }
 
     public async Task<BaseResponse<string>> Handle(RegisterHospitalRequest request, CancellationToken cancellationToken)
@@ -100,6 +104,10 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
                 {
                     _logger.LogInformation($"REGISTER_HOSPITAL_REQUEST =>  User with email {request.HospitalEmail} was taken");
                     return new BaseResponse<string>(false, "This Email Already Exisits");
+                }
+                if (!(await _emailService.CheckDisposableEmailAsync(request.Email)).Status)
+                {
+                    return new BaseResponse<string>(false, " Sorry You cannot use this type of email address");
                 }
                 var cacstream = new MemoryStream();
 
