@@ -9,7 +9,6 @@ public interface IUtilityService
 {
     string GenerateRandomNumber(int length);
     string GetPDFBase64String(string htmlBody);
-    IEnumerable<string> GetAllPrivileges();
 
     BaseResponse<string> VerifySdtmDatasetFormat(IFormFile file);
     BaseResponse<string> VerifyICDDatasetFormat(IFormFile file);

@@ -84,11 +84,13 @@ public class RegisterResearchCenterRequestHandler : IRequestHandler<RegisterRese
     private ICloudinaryService _cloudinary;
     private UserManager<DataAggregatorUser> _usermanager;
     private readonly IAccountService _account;
+    private readonly IEmailService _emailService;
     public RegisterResearchCenterRequestHandler(FinalYearDBContext context,
         ILogger<RegisterResearchCenterRequestHandler> logger,
         ICloudinaryService cloudinary,
         UserManager<DataAggregatorUser> usermanager,
-        IAccountService account
+        IAccountService account,
+        IEmailService emailService
         )
     {
         _context = context;
@@ -96,6 +98,7 @@ public class RegisterResearchCenterRequestHandler : IRequestHandler<RegisterRese
         _cloudinary = cloudinary;
         _usermanager = usermanager;
         _account = account;
+        _emailService = emailService;
     }
     public async Task<BaseResponse<string>> Handle(RegisterResearchCenterRequest request, CancellationToken cancellationToken)
     {
@@ -109,6 +112,10 @@ public class RegisterResearchCenterRequestHandler : IRequestHandler<RegisterRese
                 {
                     _logger.LogInformation($"REGISTER_HOSPITAL_REQUEST =>  User with email {request.Email} was taken");
                     return new BaseResponse<string>(false, "This Email Already Exisits");
+                }
+                if (! (await _emailService.CheckDisposableEmailAsync(request.Email)).Status)
+                {
+                    return new BaseResponse<string>(false, " Sorry You cannot use this type of email address");
                 }
 
                 var passportmemoryStream = new MemoryStream();
@@ -245,7 +252,7 @@ public class RegisterResearchCenterRequestHandler : IRequestHandler<RegisterRese
         catch (Exception ex)
         {
             _logger.LogError(ex, $"REGISTER_HOSPITAL_REQUEST =>something went wrong ");
-            return new BaseResponse<string>s(false, "An Error Occured While Trying To COmplete Your Registration"); ;
+            return new BaseResponse<string>(false, "An Error Occured While Trying To COmplete Your Registration"); ;
         }
     }
 }
