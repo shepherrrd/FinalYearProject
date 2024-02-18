@@ -66,9 +66,9 @@ public class GetHospitalDataRequestsHandler : IRequestHandler<GetHospitalDataReq
                 {
                     Description = x.Description,
                     Id = x.Id,
-                    IrbProposal = irbProposal?.Path,
+                    IrbProposal = irbProposal?.Path!,
                     Name = $"{research?.FirstName} {research?.LastName}",
-                    Passport = document?.DocumentPath,
+                    Passport = document?.DocumentPath!,
                     TimeUpdated = x.TimeUpdated
                 };
 

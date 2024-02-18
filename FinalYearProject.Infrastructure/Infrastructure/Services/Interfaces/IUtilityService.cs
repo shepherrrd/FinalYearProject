@@ -12,6 +12,8 @@ public interface IUtilityService
 
     BaseResponse<string> VerifySdtmDatasetFormat(IFormFile file);
     BaseResponse<string> VerifyICDDatasetFormat(IFormFile file);
+     string ConvertToCsv<T>(IEnumerable<T> records);
+    string ConvertToBase64(string input);
 
 }
 

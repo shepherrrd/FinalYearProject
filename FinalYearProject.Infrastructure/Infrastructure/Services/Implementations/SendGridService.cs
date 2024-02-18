@@ -44,10 +44,11 @@ namespace Payultra.Infrastructure.Services.Implementations
                 var htmlContent = request.HtmlEmailBody;
                 var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
-                if (!string.IsNullOrWhiteSpace(request.AttachementBase64String) && !string.IsNullOrWhiteSpace(request.AttachementName))
+                if (request.AttachementBase64String.IsAny() && request.AttachementName.IsAny() &&request.AttachementType.IsAny())
                 {
                     //msg.Attachments = new List<SendGrid.Helpers.Mail.Attachment> { new SendGrid.Helpers.Mail.Attachment { Filename = request.AttachementName, Content = request.AttachementBase64String, Type = request.AttachementType, Disposition = "attachment" } };
-                    msg.AddAttachment(request.AttachementName, request.AttachementBase64String, request.AttachementType, "attachment");
+                    msg.AddAttachment(request.AttachementName!.FirstOrDefault(), request.AttachementBase64String!.FirstOrDefault(), request.AttachementType!.FirstOrDefault(), "SDTM");
+                    msg.AddAttachment(request.AttachementName!.ElementAtOrDefault(1), request.AttachementBase64String!.ElementAtOrDefault(1), request.AttachementType!.ElementAtOrDefault(1), "ICD");
                 }
 
                 var response = await client.SendEmailAsync(msg).ConfigureAwait(false);

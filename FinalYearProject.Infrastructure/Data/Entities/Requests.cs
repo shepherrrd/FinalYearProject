@@ -8,4 +8,6 @@ public class Requests : BaseEntity
     public long HospitalId { get; set; }
     public long ResearchCenterId { get; set; }
 
+    public long MedicalRecordID { get; set; }
+
 }

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Runtime.CompilerServices;
 
 namespace FinalYearProject.Infrastructure.Infrastructure.Services.Implementations;
 
@@ -145,6 +146,37 @@ namespace FinalYearProject.Infrastructure.Infrastructure.Services.Implementation
             EmailSubject = $"Keys for Documents",
             HtmlEmailBody = htmlEmailBody,
             PlainEmailBody = plainEmailBody
+        });
+
+        return new BaseResponse(true, "Sent");
+
+    }
+
+    public async Task<BaseResponse> SendMedicalRecordsAsync(SendMedicalDataRequest request, CancellationToken cancellationToken)
+    {
+        var emailBodyRequest = new EmailBodyRequest { Email = request.Email, FirstName = request.RESEARCHNAME, EmailTitle = EmailTitleEnum.DOCUMENTAPPROVED };
+        var emailBodyResponse = await _emailService.GetEmailBody(emailBodyRequest);
+        var emailBody = emailBodyResponse.Data;
+        if (!emailBodyResponse.Status)
+            return new BaseResponse(false, emailBodyResponse.Message!);
+        string? htmlEmailBody = emailBody!.HtmlBody;
+        string? plainEmailBody = emailBody.PlainBody;
+        htmlEmailBody?.Replace("[[NAME]]", request.RESEARCHNAME);
+        htmlEmailBody?.Replace("[[HOSPITAL]]", request.HOSPITALNAME);
+
+        plainEmailBody?.Replace("[[NAME]]", request.RESEARCHNAME);
+        plainEmailBody?.Replace("[[HOSPITAL]]", request.HOSPITALNAME);
+
+        await _emailService.SendEmailAsync(new SingleEmailRequest
+        {
+            RecipientEmailAddress = request.Email,
+            RecipientName = request.RESEARCHNAME,
+            EmailSubject = $"Medical Data Approved",
+            HtmlEmailBody = htmlEmailBody,
+            PlainEmailBody = plainEmailBody,
+            AttachementBase64String = request.AttachementBase64String,
+            AttachementName = request.AttachementName,
+            AttachementType = request.AttachementType
         });
 
         return new BaseResponse(true, "Sent");

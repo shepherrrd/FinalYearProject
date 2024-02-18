@@ -14,7 +14,6 @@ namespace FinalYearProject.Api.Application.CQRS.Registration;
 
 public class RegisterHospitalRequest : IRequest<BaseResponse<string>>
 {
-#nullable disable
     public string? Location { get; set; }
     public string? HospitalName { get; set; }
     public string? HospitalEmail { get; set; }
@@ -105,7 +104,7 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
                     _logger.LogInformation($"REGISTER_HOSPITAL_REQUEST =>  User with email {request.HospitalEmail} was taken");
                     return new BaseResponse<string>(false, "This Email Already Exisits");
                 }
-                if (!(await _emailService.CheckDisposableEmailAsync(request.Email)).Status)
+                if (!(await _emailService.CheckDisposableEmailAsync(request.HospitalEmail!)).Status)
                 {
                     return new BaseResponse<string>(false, " Sorry You cannot use this type of email address");
                 }
@@ -188,7 +187,7 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
                 {
                     return new BaseResponse<string>(false, sendemail.Message!);
                 }
-                var addpassword = await _usermanager.AddPasswordAsync(user, request.Password);
+                var addpassword = await _usermanager.AddPasswordAsync(user, request.Password!);
                 if (!addpassword.Succeeded)
                     return new BaseResponse<string>(false, "An Error Occured While Trying to Complete your Registration");
                 var requesthospital = new Request { 

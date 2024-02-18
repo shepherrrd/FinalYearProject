@@ -32,8 +32,8 @@ public class MedicalDataRecords : BaseEntity
 public class ICDDataset
 {
     public int Patient_ID { get; set; }
-    public string Diagnosis_Code { get; set; }
-    public string Diagnosis_Description { get; set; }
+    public string Diagnosis_Code { get; set; } = default!;
+    public string Diagnosis_Description { get; set; } = default!;
 }
 public class ResearchCenter
 {
