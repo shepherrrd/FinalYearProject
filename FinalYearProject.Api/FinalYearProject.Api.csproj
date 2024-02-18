@@ -25,4 +25,8 @@
     <ProjectReference Include="..\FinalYearProject.Infrastructure\FinalYearProject.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Application\CQRS\Dashboard\ResearchCenter\" />
+  </ItemGroup>
+
 </Project>
