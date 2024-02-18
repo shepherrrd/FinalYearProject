@@ -155,8 +155,19 @@ namespace FinalYearProject.Infrastructure.Services.Implementations
                     if (!string.IsNullOrWhiteSpace(plainTextFile))
                         response.PlainBody = plainTextFile;
                     break;
+                case EmailTitleEnum.DOCUMENTAPPROVED:
+                    fileName = "medicalrecordsapproved.html";
+                    templateFile = await GetTemplateFileAsync(emailFolderName, fileName);
+                    if (!string.IsNullOrWhiteSpace(templateFile))
+                        response.HtmlBody = templateFile;
 
-                
+                    plainFilename = "medicalrecordsapproved.txt";
+                    plainTextFile = await GetTemplateFileAsync(plaintTextFolderName, plainFilename);
+                    if (!string.IsNullOrWhiteSpace(plainTextFile))
+                        response.PlainBody = plainTextFile;
+                    break;
+
+
 
                 case EmailTitleEnum.CREATENEWUSER:
                     fileName = "welcomenewuser.html";

@@ -27,11 +27,10 @@ namespace FinalYearProject.Infrastructure.Data.Models
     }
     public class ErrorResponse
     {
-#nullable disable
         public bool Status { get; set; } = false;
-        public string Message { get; set; }
+        public string? Message { get; set; }
         public List<string> Errors { get; set; } = new();
-        public string TraceId { get; set; }
+        public string? TraceId { get; set; }
     }
 
     public class SingleEmailRequest
@@ -41,9 +40,23 @@ namespace FinalYearProject.Infrastructure.Data.Models
         public string? EmailSubject { get; set; }
         public string? HtmlEmailBody { get; set; }
         public string? PlainEmailBody { get; set; }
-        public string? AttachementBase64String { get; set; }
-        public string? AttachementName { get; set; }
-        public string? AttachementType { get; set; }
+        public List<string>? AttachementBase64String { get; set; }
+        public List<string>? AttachementName { get; set; }
+        public List<string>? AttachementType { get; set; }
+    }
+    public class DataEmailRequest
+    {
+        public string? RecipientName { get; set; }
+        public string? RecipientEmailAddress { get; set; }
+        public string? EmailSubject { get; set; }
+        public string? HtmlEmailBody { get; set; }
+        public string? PlainEmailBody { get; set; }
+        public string? SDTMAttachementBase64String { get; set; }
+        public string? SDTMAttachementName { get; set; }
+        public string? SDTMAttachementType { get; set; }
+        public string? ICDAttachementBase64String { get; set; }
+        public string? ICDAttachementName { get; set; }
+        public string? ICDAttachementType { get; set; }
     }
 
     public class RequestResponse : BaseEntity

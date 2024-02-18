@@ -13,6 +13,7 @@ using FinalYearProject.Infrastructure.Data.Entities;
 using CsvHelper;
 using System.Globalization;
 using Newtonsoft.Json;
+using CsvHelper.Configuration;
 
 namespace Payultra.Infrastructure.Services.Implementations
 {
@@ -82,9 +83,32 @@ namespace Payultra.Infrastructure.Services.Implementations
             return fileBase64string;
         }
 
-        
 
-        
+        public  string ConvertToCsv<T>(IEnumerable<T> records)
+        {
+            var configuration = new CsvConfiguration(CultureInfo.InvariantCulture);
+
+            using (var memoryStream = new MemoryStream())
+            using (var writer = new StreamWriter(memoryStream))
+            using (var csv = new CsvWriter(writer, configuration))
+            {
+                csv.WriteRecords(records);
+                writer.Flush();
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                using (var reader = new StreamReader(memoryStream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+
+        public string ConvertToBase64(string input)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(input);
+            return Convert.ToBase64String(bytes);
+        }
+
+
 
         public BaseResponse<string> VerifySdtmDatasetFormat(IFormFile file)
         {

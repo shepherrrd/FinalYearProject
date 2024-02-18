@@ -77,6 +77,18 @@ public class SendHospitalKeysRequest
     public string? PublicKey { get; set; }
 }
 
+public class SendMedicalDataRequest
+{
+    public long UserId { get; set; }
+    public string? RESEARCHNAME { get; set; }
+    public string? HOSPITALNAME { get; set; }
+    public string? Email { get; set; }
+    public List<string>? AttachementBase64String { get; set; }
+    public List<string>? AttachementName { get; set; }
+    public List<string>? AttachementType { get; set; }
+
+}
+
 public class OtpRequestResult
 {
     public long UserId { get; set; }
