@@ -81,9 +81,9 @@ public class AcceptMedicalDataRequestHandler : IRequestHandler<ChangeMedicalData
                 var sdtmrecord = JsonConvert.DeserializeObject<List<SDTMDataset>>(sdtms!);
                 var icdrecord = JsonConvert.DeserializeObject<List<ICDDataset>>(icds!);
                 string sdtmCsv = _utility.ConvertToCsv(sdtmrecord!);
-                string icdCsv =_utility.ConvertToCsv(icdrecord!);
+                string icdCsv = _utility.ConvertToCsv(icdrecord!);
 
-                // Convert CSV strings to Base64
+                //Convert CSV strings to Base64
                 string sdtmBase64 = _utility.ConvertToBase64(sdtmCsv);
                 string icdBase64 = _utility.ConvertToBase64(icdCsv);
 
@@ -106,10 +106,10 @@ public class AcceptMedicalDataRequestHandler : IRequestHandler<ChangeMedicalData
                     AttachementType = AttachementType,
                     Email = research.Email,
                     UserId = user.Id
-                },cancellationToken);
+                }, cancellationToken);
 
 
-        }
+            }
             else
             {
                 //send rejection email
