@@ -18,6 +18,16 @@ public enum MedicalRecordTypeEnum
     [Description("Health")]
     Health =1
 }
+
+public enum DataRequestSatusEnum
+{
+    [Description("Pending")]
+    PENDING =1,
+    [Description("Accepted")]
+    ACCEPTED,
+    [Description("Rejected")]
+    REJECTED
+}
 public enum OtpCodeStatusEnum
 {
     [Description("Sent")]

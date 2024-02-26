@@ -64,10 +64,10 @@ namespace FinalYearProject.Infrastructure.Infrastructure.Auth.JWT
                 };
             if (request.UserType == UserType.Admin)
             {
-                claims.Add(new Claim("Email", request.EmailAddress));
-                claims.Add(new Claim("UserType", ((int)request.UserType).ToString()));
+                claims.Add(new Claim("Email", request.EmailAddress));               
                 claims.Add(new Claim("Privilege", request.Privileges));
             }
+            claims.Add(new Claim("UserType", ((int)request.UserType).ToString()));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
