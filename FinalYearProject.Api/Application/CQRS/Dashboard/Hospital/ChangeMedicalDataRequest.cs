@@ -69,6 +69,7 @@ public class AcceptMedicalDataRequestHandler : IRequestHandler<ChangeMedicalData
             var research = await _context.Users.AsNoTracking().Select(x => new { x.FirstName, x.Id,x.Email }).FirstOrDefaultAsync(x => x.Id == medicalrequest.ResearchCenterId, cancellationToken);
             medicalrequest.IsApproved = request.IsApproved;
             medicalrequest.TimeUpdated = DateTimeOffset.UtcNow;
+            medicalrequest.status = request.IsApproved ? DataRequestSatusEnum.ACCEPTED : DataRequestSatusEnum.REJECTED;
             await _context.SaveChangesAsync(cancellationToken);
             if (medicalrequest.IsApproved)
             {

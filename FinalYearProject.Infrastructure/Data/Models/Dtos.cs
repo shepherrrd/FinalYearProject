@@ -1,4 +1,5 @@
 ﻿using FinalYearProject.Infrastructure.Data.Entities;
+using FinalYearProject.Infrastructure.Infrastructure.Utilities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,15 @@ namespace FinalYearProject.Infrastructure.Data.Models
 {
     internal class Dtos
     {
+    }
+
+    public class DataReuqestDto : BaseEntity
+    {
+        public string Description { get; set; } = default!;
+        public bool IsApproved { get; set; }
+        public int IrbProposalId { get; set; }
+        public string Name { get; set; } = default!;
+        public DataRequestSatusEnum status { get; set; }
     }
     public class MeetchopraValidResponse
     {
