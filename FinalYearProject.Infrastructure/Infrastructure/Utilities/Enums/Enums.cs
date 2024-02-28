@@ -78,7 +78,10 @@ public enum AccountStatusEnum
     [Description("Suspended")]
     Suspended,
     [Description("InActive")]
-    InActive
+    InActive,
+    [Description("Pending Approval")]
+    PendingApproval
+
 }
 public enum EmailTitleEnum
 {

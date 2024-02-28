@@ -54,7 +54,7 @@ builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
 
         return new BadRequestObjectResult(result);
     };
-}); ;
+}); 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 

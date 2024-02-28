@@ -4,7 +4,7 @@ using FinalYearProject.Infrastructure.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinalYearProject.Api.Application.CQRS.Identity;
+namespace FinalYearProject.Api.Application.CQRS.Dashboard.ResearchCenter;
 
 
 public class VIewResearchCenterDashboard : IRequest<BaseResponse<List<DataReuqestDto>>>
@@ -28,7 +28,7 @@ public class VIewResearchCenterDashboardHandler : IRequestHandler<VIewResearchCe
     {
         try
         {
-            var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.UserID,cancellationToken);
+            var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.UserID, cancellationToken);
             if (user is null)
             {
                 _logger.LogInformation($"VIEW_REQUEST_RESEARCH => USER WITH ID {request.UserID} was null");
@@ -38,17 +38,17 @@ public class VIewResearchCenterDashboardHandler : IRequestHandler<VIewResearchCe
             var response = new List<DataReuqestDto>();
             requests.ForEach(async x =>
             {
-            var p = new DataReuqestDto
-            {
-                Description = x.Description,
-                status = x.status,
-                IsApproved = x.IsApproved,
-                TimeCreated = x.TimeCreated,
-                TimeUpdated = x.TimeUpdated,
-                Id = x.Id,
-                IrbProposalId = x.IrbProposalId 
-            }; 
-               var f = await _context.HospitalInfos.Select(x => new {x.ID,x.HospitalName}).FirstOrDefaultAsync(t => t.ID == x.Id,cancellationToken);
+                var p = new DataReuqestDto
+                {
+                    Description = x.Description,
+                    status = x.status,
+                    IsApproved = x.IsApproved,
+                    TimeCreated = x.TimeCreated,
+                    TimeUpdated = x.TimeUpdated,
+                    Id = x.Id,
+                    IrbProposalId = x.IrbProposalId
+                };
+                var f = await _context.HospitalInfos.Select(x => new { x.ID, x.HospitalName }).FirstOrDefaultAsync(t => t.ID == x.Id, cancellationToken);
                 p.Name = f.HospitalName!;
                 response.Add(p);
             });

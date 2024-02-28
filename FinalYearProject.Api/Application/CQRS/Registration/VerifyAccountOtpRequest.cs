@@ -55,7 +55,7 @@ public class VerifyAccountOtpRequestHandler : IRequestHandler<VerifyAccountOtpRe
         {
             return new BaseResponse(false,validateotp.Message ?? "Invalid Otp");
         }
-        user.AccountStatus = AccountStatusEnum.Active;
+        user.AccountStatus = AccountStatusEnum.PendingApproval;
         user.EmailConfirmed = true;
         user.TimeUpdated = DateTimeOffset.UtcNow;
         await _context.SaveChangesAsync(cancellationToken);
