@@ -35,6 +35,12 @@ public class ICDDataset
     public string Diagnosis_Code { get; set; } = default!;
     public string Diagnosis_Description { get; set; } = default!;
 }
+public class MedicalDataRecordsResponse : BaseEntity
+{
+    public string HospitalName { get; set; } = string.Empty;
+    public MedicalRecordTypeEnum RecordType { get;  set; }
+
+}
 public class ResearchCenter
 {
     public int ResearchCenterId { get; set; }
