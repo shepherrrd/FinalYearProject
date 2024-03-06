@@ -3,6 +3,7 @@ using System;
 using FinalYearProject.Infrastructure.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinalYearProject.Infrastructure.Migrations
 {
     [DbContext(typeof(FinalYearDBContext))]
-    partial class FinalYearDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240306225043_Medicalrecordupdate")]
+    partial class Medicalrecordupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,8 +109,8 @@ namespace FinalYearProject.Infrastructure.Migrations
                             Icon = "countryimages/nigeria.png",
                             IsoCode = "NG",
                             Name = "Nigeria",
-                            TimeCreated = new DateTimeOffset(new DateTime(2024, 3, 6, 22, 51, 26, 34, DateTimeKind.Unspecified).AddTicks(886), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 3, 6, 22, 51, 26, 34, DateTimeKind.Unspecified).AddTicks(889), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2024, 3, 6, 22, 50, 42, 439, DateTimeKind.Unspecified).AddTicks(7380), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 3, 6, 22, 50, 42, 439, DateTimeKind.Unspecified).AddTicks(7381), new TimeSpan(0, 0, 0, 0, 0))
                         });
                 });
 
@@ -222,7 +225,7 @@ namespace FinalYearProject.Infrastructure.Migrations
                             Id = 1L,
                             AccessFailedCount = 0,
                             AccountStatus = 1,
-                            ConcurrencyStamp = "0262933e-bd4d-4e1c-82e0-2b33695a5b77",
+                            ConcurrencyStamp = "9d8ba4ac-60a2-4284-971c-4260f34c03a4",
                             Email = "technology@dataaggregator.com",
                             EmailConfirmed = true,
                             FirstName = "FInalYear",
@@ -231,56 +234,15 @@ namespace FinalYearProject.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "TECHNOLOGY@DATAAGGREGATOR.COM",
                             NormalizedUserName = "TECHNOLOGY@DATAAGGREGATOR.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPlb0TkiR06a7zEeCTraXwLC8aHWbGBLiyAYRlQ3JOJN8wDvv7nLzD5/Jnaz95eOpA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEyAPFrbR5Blv61XOQZM27EmUc+eAyu+eGULmjTkagHe8FYJTKXsFL/9FcuL+i4oQg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "DF871A8A557B4049927912CA921BF579",
-                            TimeCreated = new DateTimeOffset(new DateTime(2024, 3, 6, 22, 51, 26, 32, DateTimeKind.Unspecified).AddTicks(4457), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 3, 6, 22, 51, 26, 32, DateTimeKind.Unspecified).AddTicks(4463), new TimeSpan(0, 0, 0, 0, 0)),
+                            SecurityStamp = "746726FB8065F041B0ADAA6B1CF6F3AD",
+                            TimeCreated = new DateTimeOffset(new DateTime(2024, 3, 6, 22, 50, 42, 437, DateTimeKind.Unspecified).AddTicks(9827), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 3, 6, 22, 50, 42, 437, DateTimeKind.Unspecified).AddTicks(9832), new TimeSpan(0, 0, 0, 0, 0)),
                             TwoFactorEnabled = false,
                             UserName = "TECHNOLOGY@DATAAGGREGATOR.COM",
                             UserType = 1
                         });
-                });
-
-            modelBuilder.Entity("FinalYearProject.Infrastructure.Data.Entities.DataRequests", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<long>("HospitalId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("IrbProposalId")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("boolean");
-
-                    b.Property<long>("MedicalRecordID")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("ResearchCenterId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset>("TimeCreated")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset>("TimeUpdated")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("status")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("HospitalRequests");
                 });
 
             modelBuilder.Entity("FinalYearProject.Infrastructure.Data.Entities.Document", b =>
