@@ -34,7 +34,7 @@ public class UpdateRegistrationStatusRequestHandler : IRequestHandler<UpdateRegi
                 return new BaseResponse(false, "The User Tied to this operation was not found");
             }
 
-            var registration = await _context.RegistrationRequests.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.RegistrationID, cancellationToken);
+            var registration = await _context.RegistrationRequests.FirstOrDefaultAsync(x => x.Id == request.RegistrationID, cancellationToken);
             if (registration is null)
                 return new BaseResponse(false, "The registration request tied to this operation was not found");
             if (request.IsApproved)
