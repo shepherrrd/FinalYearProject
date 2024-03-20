@@ -1,5 +1,6 @@
 ﻿using FinalYearProject.Infrastructure.Data.Entities;
 using FinalYearProject.Infrastructure.Infrastructure.Persistence;
+using FinalYearProject.Infrastructure.Infrastructure.Utilities.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,10 +41,11 @@ public class UpdateRegistrationStatusRequestHandler : IRequestHandler<UpdateRegi
             {
                 registration.IsApproved = true; 
                 var registrationed = await _context.Users.FirstOrDefaultAsync(x => x.Id == registration.UserID, cancellationToken);
-                registrationed!.AccountStatus =  Infrastructure.Infrastructure.Utilities.Enums.AccountStatusEnum.Active;
+                registrationed!.AccountStatus =  AccountStatusEnum.Active;
+                await _context.SaveChangesAsync(cancellationToken);
             }
 
-            return new BaseResponse(false, "Status CHanged Successfully");
+            return new BaseResponse(true, request.IsApproved ?  "Approved Successfully " : "Rejected successfully");
         }
         catch (Exception )
         {
