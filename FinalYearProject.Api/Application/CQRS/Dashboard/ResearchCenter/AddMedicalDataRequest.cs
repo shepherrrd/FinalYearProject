@@ -126,6 +126,7 @@ public class AddMedicalDataRequestHandler : IRequestHandler<AddMedicalDataReques
 
             };
             await _context.AddAsync(requested, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
             return new BaseResponse(true, "Request Created Successfully");
 
         }

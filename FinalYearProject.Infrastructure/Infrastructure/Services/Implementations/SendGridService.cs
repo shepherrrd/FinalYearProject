@@ -44,11 +44,20 @@ namespace Payultra.Infrastructure.Services.Implementations
                 var htmlContent = request.HtmlEmailBody;
                 var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
-                if (request.AttachementBase64String.IsAny() && request.AttachementName.IsAny() &&request.AttachementType.IsAny())
+                if (request.AttachementBase64String.IsAny() && request.AttachementName.IsAny() && request.AttachementType.IsAny())
                 {
-                    //msg.Attachments = new List<SendGrid.Helpers.Mail.Attachment> { new SendGrid.Helpers.Mail.Attachment { Filename = request.AttachementName, Content = request.AttachementBase64String, Type = request.AttachementType, Disposition = "attachment" } };
-                    msg.AddAttachment(request.AttachementName!.FirstOrDefault(), request.AttachementBase64String!.FirstOrDefault(), request.AttachementType!.FirstOrDefault(), "SDTM");
-                    msg.AddAttachment(request.AttachementName!.ElementAtOrDefault(1), request.AttachementBase64String!.ElementAtOrDefault(1), request.AttachementType!.ElementAtOrDefault(1), "ICD");
+                    // Example for adding two attachments
+                    for (int i = 0; i < request.AttachementName!.Count; i++)
+                    {
+                        var name = request.AttachementName.ElementAtOrDefault(i);
+                        var content = request.AttachementBase64String!.ElementAtOrDefault(i);
+                        var type = request.AttachementType!.ElementAtOrDefault(i);
+
+                        if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(content) && !string.IsNullOrWhiteSpace(type))
+                        {
+                            msg.AddAttachment(name, content, type, "attachment"); // Use "attachment" for the disposition
+                        }
+                    }
                 }
 
                 var response = await client.SendEmailAsync(msg).ConfigureAwait(false);

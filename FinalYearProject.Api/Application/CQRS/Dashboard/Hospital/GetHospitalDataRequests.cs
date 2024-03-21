@@ -37,7 +37,7 @@ public class GetHospitalDataRequestsHandler : IRequestHandler<GetHospitalDataReq
 
             // Fix: Use ToListAsync to perform database query once
             var requestResponses = await _context.HospitalRequests
-                .Where(x => x.HospitalId == hospital.HospitalInfo)
+                .Where(x => x.HospitalId == hospital.Id)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
 

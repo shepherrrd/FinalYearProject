@@ -1,6 +1,7 @@
 ﻿
 using FinalYearProject.Infrastructure.Data.Models;
 using FinalYearProject.Infrastructure.Infrastructure.Utilities.Enums;
+using System.Security.Cryptography;
 
 namespace FinalYearProject.Infrastructure.Data.Entities;
 
@@ -68,13 +69,25 @@ public class SendOTPRequest
     public OtpRecipientTypeEnum RecipientType { get; set; }
     public OtpVerificationPurposeEnum Purpose { get; set; }
 }
+
+public class UserRSA 
+{
+    public long Id { get; set; }
+    public string PublicRSAParameters { get; set; } = default!;
+    public string PrivateRSAParameters { get; set; } = default!;
+
+    public long UserID { get; set; }
+}
 public class SendHospitalKeysRequest
 {
     public long UserId { get; set; } 
     public string? FirstName { get; set; }
     public string? Email { get; set; }
-    public string? PrivateKey { get; set; }
-    public string? PublicKey { get; set; }
+    public string PublicKeyModulus { get; set; } = default!;
+    public string PublicKeyExponent { get; set; } = default!;
+    public string PrivateKeyModulus { get; set; } = default!;
+
+    public string PrivateKeyExponent { get; set; } = default!;
 }
 
 public class SendMedicalDataRequest

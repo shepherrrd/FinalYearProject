@@ -133,11 +133,15 @@ namespace FinalYearProject.Infrastructure.Infrastructure.Services.Implementation
             return new BaseResponse(false,emailBodyResponse.Message!);
         string? htmlEmailBody = emailBody!.HtmlBody;
         string? plainEmailBody = emailBody.PlainBody;
-        htmlEmailBody?.Replace("[[PUBKEY]]", request.PublicKey);
-        htmlEmailBody?.Replace("[[PRIVKEY]]", request.PrivateKey);
+        htmlEmailBody = htmlEmailBody?.Replace("[[PUBKEY]]", request.PublicKeyModulus);
+        htmlEmailBody = htmlEmailBody?.Replace("[[PRIVKEY]]", request.PrivateKeyModulus);
+        htmlEmailBody = htmlEmailBody?.Replace("[[PUB_EXPONENT_KEY]]", request.PublicKeyExponent);
+        htmlEmailBody = htmlEmailBody?.Replace("[[PRIV_EXPONENT_KEY]]", request.PrivateKeyExponent);
 
-        plainEmailBody?.Replace("[[PUBKEY]]", request.PublicKey);
-        plainEmailBody?.Replace("[[PRIVKEY]]", request.PrivateKey);
+        plainEmailBody = plainEmailBody?.Replace("[[PUBKEY]]", request.PublicKeyModulus);
+        plainEmailBody = plainEmailBody?.Replace("[[PRIVKEY]]", request.PrivateKeyModulus);
+        plainEmailBody = plainEmailBody?.Replace("[[PUB_EXPONENT_KEY]]", request.PublicKeyExponent);
+        plainEmailBody = plainEmailBody?.Replace("[[PRIV_EXPONENT_KEY]]", request.PrivateKeyExponent);
 
         await _emailService.SendEmailAsync(new SingleEmailRequest
         {
@@ -161,11 +165,11 @@ namespace FinalYearProject.Infrastructure.Infrastructure.Services.Implementation
             return new BaseResponse(false, emailBodyResponse.Message!);
         string? htmlEmailBody = emailBody!.HtmlBody;
         string? plainEmailBody = emailBody.PlainBody;
-        htmlEmailBody?.Replace("[[NAME]]", request.RESEARCHNAME);
-        htmlEmailBody?.Replace("[[HOSPITAL]]", request.HOSPITALNAME);
+        htmlEmailBody = htmlEmailBody?.Replace("[[NAME]]", request.RESEARCHNAME);
+        htmlEmailBody = htmlEmailBody?.Replace("[[HOSPITAL]]", request.HOSPITALNAME);
 
-        plainEmailBody?.Replace("[[NAME]]", request.RESEARCHNAME);
-        plainEmailBody?.Replace("[[HOSPITAL]]", request.HOSPITALNAME);
+        plainEmailBody = plainEmailBody?.Replace("[[NAME]]", request.RESEARCHNAME);
+        plainEmailBody = plainEmailBody?.Replace("[[HOSPITAL]]", request.HOSPITALNAME);
 
         await _emailService.SendEmailAsync(new SingleEmailRequest
         {

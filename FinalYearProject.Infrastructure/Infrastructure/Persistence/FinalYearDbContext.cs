@@ -18,6 +18,7 @@ public class FinalYearDBContext : IdentityDbContext<DataAggregatorUser, Applicat
 
     public DbSet<HospitalInfo> HospitalInfos { get; set; }
     public DbSet<DataRequests> HospitalRequests { get; set; }
+    public DbSet<UserRSA> UserRSA {  get; set; }
     public DbSet<OtpVerification> OtpVerifications {  get; set; }
 
     public DbSet<MedicalDataRecords> MedicalDataRecords { get; set; }
