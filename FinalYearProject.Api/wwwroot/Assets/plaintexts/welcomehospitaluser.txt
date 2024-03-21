@@ -1,3 +1,5 @@
  Thank you for registering with us. Please use the following Keys given to you for Uploading data and Accepting requests:
             Your Public Key for uploading documents [[PUBKEY]]
             Your Private Key for Accepting documents Requests [[PRIVKEY]]
+            Your Public Exponent Key for Accepting documents Requests :  [[PUB_EXPONENT_KEY]] 
+            Your Private Exponent Key for Accepting documents Requests :  [[PRIV_EXPONENT_KEY]] 

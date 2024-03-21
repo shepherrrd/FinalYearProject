@@ -5,6 +5,7 @@ using FinalYearProject.Infrastructure.Infrastructure.Utilities.Enums;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace FinalYearProject.Api.Application.CQRS.Registration;
 
@@ -63,11 +64,21 @@ public class VerifyAccountOtpRequestHandler : IRequestHandler<VerifyAccountOtpRe
         if(user.AccountStatus == AccountStatusEnum.Active && user.UserType == UserType.Hospital)
         {
             var keys =  _utilityService.GenerateEncryptionKey();
+            var userrsa = new UserRSA { 
+            PrivateRSAParameters = JsonConvert.SerializeObject( keys.Data!.privatersa),
+            PublicRSAParameters = JsonConvert.SerializeObject( keys.Data.publicrsa),
+            UserID = user.Id,
+            };
+            await _context.AddAsync(userrsa,cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+
             var sendkeys = await _accountService.SendHospitalWelcomeEmailAsync(new SendHospitalKeysRequest {
                 Email = user.Email,
                 FirstName = user.FirstName,
-                PrivateKey = keys.Data!.PrivateKey,
-                PublicKey = keys.Data.PublicKey,
+                PrivateKeyExponent = keys.Data!.PrivateKeyExponent,
+                PublicKeyExponent = keys.Data.PublicKeyExponent,
+                PrivateKeyModulus = keys.Data.PrivateKeyModulus,
+                PublicKeyModulus = keys.Data.PublicKeyModulus,
                 UserId = user.Id
             
             }, cancellationToken);

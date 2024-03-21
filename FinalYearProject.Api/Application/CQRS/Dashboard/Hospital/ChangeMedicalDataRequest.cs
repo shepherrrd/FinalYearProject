@@ -8,6 +8,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Security.Cryptography;
 
 namespace FinalYearProject.Api.Application.CQRS.Dashboard.Hospital;
 
@@ -15,6 +16,7 @@ public class ChangeMedicalDataRequest : IRequest<BaseResponse>
 {
     internal long UserId { get; set; }
     public string PrivateKey { get; set; } = default!;
+    public string PrivateExponentKey { get; set; } = default!;
     public int RequestID { get; set; }
     
     internal bool IsApproved { get; set; } 
@@ -25,6 +27,7 @@ public class AcceptMedicalDataRequestValidator : AbstractValidator<ChangeMedical
     public AcceptMedicalDataRequestValidator()
     {
         RuleFor(x => x.PrivateKey).NotNull().NotEmpty().When(x => x.IsApproved);
+        RuleFor(x => x.PrivateExponentKey).NotNull().NotEmpty().When(x => x.IsApproved);
         RuleFor(x => x.RequestID).NotNull().NotEmpty();
     }
 }
@@ -37,13 +40,15 @@ public class AcceptMedicalDataRequestHandler : IRequestHandler<ChangeMedicalData
     private readonly IAccountService _accountService;
     private readonly IEmailService _emailService;
     private readonly ILogger<AcceptMedicalDataRequestHandler> _logger;
+    private readonly IHybridEncryption _hybrid;
 
     public AcceptMedicalDataRequestHandler(FinalYearDBContext context,
         IEncryptionService encryption,
         IUtilityService utility,
         IAccountService accountService,
         IEmailService emailService,
-        ILogger<AcceptMedicalDataRequestHandler> logger
+        ILogger<AcceptMedicalDataRequestHandler> logger,
+        IHybridEncryption hybrid
 
         )
     {
@@ -53,6 +58,7 @@ public class AcceptMedicalDataRequestHandler : IRequestHandler<ChangeMedicalData
         _accountService = accountService;
         _emailService = emailService;
         _logger = logger;
+        _hybrid = hybrid;
     }
 
     public async Task<BaseResponse> Handle(ChangeMedicalDataRequest request, CancellationToken cancellationToken)
@@ -63,9 +69,9 @@ public class AcceptMedicalDataRequestHandler : IRequestHandler<ChangeMedicalData
             if (user is null)
                 return new BaseResponse(false, "THe User Tied to this operation was not found");
 
-            var medicalrequest = await _context.HospitalRequests.FirstOrDefaultAsync(x => x.Id == request.RequestID && x.HospitalId == user.Id, cancellationToken);
+            var medicalrequest = await _context.HospitalRequests.FirstOrDefaultAsync(x => x.Id == request.RequestID && x.HospitalId == user.Id ,cancellationToken);
             if (medicalrequest is null)
-                return new BaseResponse(false, "The request tied to this operation was noto found");
+                return new BaseResponse(false, "The request tied to this operation was not found");
             var research = await _context.Users.AsNoTracking().Select(x => new { x.FirstName, x.Id,x.Email }).FirstOrDefaultAsync(x => x.Id == medicalrequest.ResearchCenterId, cancellationToken);
             medicalrequest.IsApproved = request.IsApproved;
             medicalrequest.TimeUpdated = DateTimeOffset.UtcNow;
@@ -77,8 +83,26 @@ public class AcceptMedicalDataRequestHandler : IRequestHandler<ChangeMedicalData
                 var record = await _context.MedicalDataRecords.AsNoTracking().FirstOrDefaultAsync(x => x.Id == medicalrequest.MedicalRecordID, cancellationToken);
                 var sdtm = record!.SDTMRecordBytes;
                 var icd = record!.ICDRecordBytes;
-                var sdtms = _encryption.DecryptdataAsync(sdtm, request.PrivateKey).Data;
-                var icds = _encryption.DecryptdataAsync(icd, request.PrivateKey).Data;
+                var userrsa = await _context.UserRSA.FirstOrDefaultAsync(x => x.UserID == user.Id, cancellationToken);
+                if(userrsa is null)
+                {
+                    return new BaseResponse(false, "Nor RSa Details Found");
+                }
+                var privrsa = JsonConvert.DeserializeObject<RSAParameters>(userrsa.PrivateRSAParameters);
+                var privateKey = new RSAParameters
+                {
+                    Modulus = Convert.FromBase64String(request.PrivateKey),
+                    Exponent = Convert.FromBase64String(request.PrivateExponentKey),
+                    // ... other necessary RSAParameters fields for the private key
+                    D = privrsa.D,
+                    P = privrsa.P,
+                    Q = privrsa.Q,
+                    DP =privrsa.DP,
+                    DQ = privrsa.DQ,
+                    InverseQ =  privrsa.InverseQ
+                };
+                var sdtms = _hybrid.DecryptData(sdtm, privrsa).Data;
+                var icds = _hybrid.DecryptData(icd, privrsa).Data;
                 var sdtmrecord = JsonConvert.DeserializeObject<List<SDTMDataset>>(sdtms!);
                 var icdrecord = JsonConvert.DeserializeObject<List<ICDDataset>>(icds!);
                 string sdtmCsv = _utility.ConvertToCsv(sdtmrecord!);
@@ -91,8 +115,8 @@ public class AcceptMedicalDataRequestHandler : IRequestHandler<ChangeMedicalData
                 List<string>? AttachementBase64String = new();
                 List<string>? AttachementName = new();
                 List<string>? AttachementType = new();
-                AttachementBase64String.Add(sdtmCsv);
-                AttachementBase64String.Add(icdCsv);
+                AttachementBase64String.Add(sdtmBase64);
+                AttachementBase64String.Add(icdBase64);
                 AttachementName.Add("sdtm.csv");
                 AttachementName.Add("icd.csv");
                 AttachementType.Add("text/csv");

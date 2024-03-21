@@ -124,7 +124,7 @@ namespace Payultra.Infrastructure.Services.Implementations
                 var records = "";
                 if (result)
                 {
-                    var sdrecords = csv.GetRecords<SDTMDataset>().ToList();
+                    var sdrecords = csv.GetRecords<SDTMDataset>().ToList().Take(2);
                     records = JsonConvert.SerializeObject(sdrecords);
                 }                     
                 return new BaseResponse<string>(result, "Validation done", records);
@@ -145,7 +145,7 @@ namespace Payultra.Infrastructure.Services.Implementations
                 var records = "";
                 if (result)
                 {
-                    var sdrecords = csv.GetRecords<SDTMDataset>().ToList();
+                    var sdrecords = csv.GetRecords<ICDDataset>().ToList().Take(2);
                     records = JsonConvert.SerializeObject(sdrecords);
                 }
                 return new BaseResponse<string>(result, "Validation done", records);

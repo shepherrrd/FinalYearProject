@@ -24,14 +24,15 @@ public class EncryptionService : IEncryptionService
         return new BaseResponse<string>(true,"Decrypted Successfully", Encoding.UTF8.GetString(decryptedData));
     }
 
-    public BaseResponse<byte[]> EncryptDataAsync(string data,string publicKey)
+    public BaseResponse<byte[]> EncryptDataAsync(string data,string publicKey, string exponentkey)
     {
         byte[] encryptedData;
         using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
         {
             rsa.ImportParameters(new RSAParameters
             {
-                Modulus = Convert.FromBase64String(publicKey)
+                Modulus = Convert.FromBase64String(publicKey),
+                Exponent = Convert.FromBase64String(exponentkey) // You need to include the Exponent here
             });
             byte[] dataToEncryptBytes = Encoding.UTF8.GetBytes(data);
             encryptedData = rsa.Encrypt(dataToEncryptBytes, false);
@@ -41,25 +42,42 @@ public class EncryptionService : IEncryptionService
 
     public BaseResponse<EncryptionEntity> GenerateEncryptionKey()
     {
-        using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(2048)) // 2048-bit key size
+        using (var rsa = new RSACryptoServiceProvider(2048)) // 2048-bit key size
         {
-            RSAParameters privateKey = rsa.ExportParameters(true);
-            RSAParameters publicKey = rsa.ExportParameters(false);
+            var publicKey = rsa.ExportParameters(false);
+            var privateKey = rsa.ExportParameters(true);
 
-            var response = new BaseResponse<EncryptionEntity>();
-            if (privateKey.Modulus == null || publicKey.Modulus == null)
+            var response = new EncryptionEntity();
+            if (privateKey.Modulus == null || publicKey.Modulus == null || publicKey.Exponent == null || privateKey.Exponent == null)
             {
                 return new BaseResponse<EncryptionEntity>
                 {
                     Status = false,
-                    Message = "Error generating key pair: Modulus is null"
+                    Message = "Error generating key pair: Modulus or Exponent is null"
                 };
             }
-            response.Data!.PublicKey = Convert.ToBase64String(publicKey.Modulus);
-            response.Data.PrivateKey = Convert.ToBase64String(privateKey.Modulus);
-            response.Status = true;
-            response.Message = "Keys generated";
-            return response;
+            var keyPair = new EncryptionEntity
+            {
+                PublicKeyModulus = Convert.ToBase64String(publicKey.Modulus),
+                PublicKeyExponent = Convert.ToBase64String(publicKey.Exponent),
+                PrivateKeyModulus = Convert.ToBase64String(privateKey.Modulus),
+                PrivateKeyExponent = Convert.ToBase64String(privateKey.Exponent),
+                privatersa = privateKey,
+                publicrsa = publicKey
+                // Assign other components of the private key as needed
+            };
+
+            return new BaseResponse<EncryptionEntity>(true, "Fetched", keyPair);
         }
     }
 }
+public class RsaKeyPair
+{
+    public string PublicKeyModulus { get; set; } = default!;
+    public string PublicKeyExponent { get; set; } = default!;
+    public string PrivateKeyModulus { get; set; } = default!;
+
+    public string PrivateKeyExponent { get; set; } = default!;
+}
+    // Include other components of the private key as needed
+
