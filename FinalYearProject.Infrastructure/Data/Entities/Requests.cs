@@ -10,6 +10,8 @@ public class DataRequests : BaseEntity
     public int IrbProposalId { get; set; }
     public long HospitalId { get; set; }
     public long ResearchCenterId { get; set; }
+    public long IrbApproval { get; set; }
+    public long Reason { get; set; }
     public DataRequestSatusEnum status { get; set; }
     public long MedicalRecordID { get; set; }
 

@@ -114,8 +114,10 @@ public class AddMedicalDataRequestHandler : IRequestHandler<AddMedicalDataReques
 
             var requested = new DataRequests
             {
-                IrbProposalId = irbinfo.Id,
+                IrbProposalId = researchproposalinfo.Id,
                 MedicalRecordID = record.Id,
+                IrbApproval = irbinfo.Id,
+                Reason = reason.Id,
                 ResearchCenterId = user.Id,
                 IsApproved = false,
                 Description = request.Description,

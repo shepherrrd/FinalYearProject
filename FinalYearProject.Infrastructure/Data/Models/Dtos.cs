@@ -73,6 +73,8 @@ namespace FinalYearProject.Infrastructure.Data.Models
     {
         public string Description { get; set; } = default!;
         public string IrbProposal { get; set; } = default!;
+        public string IrbApproval { get; set; } = default!;
+        public string Reason { get; set; } = default!;
         public  string Passport { get; set; } = default!;
         public string Name { get; set; } = default!;
     }
