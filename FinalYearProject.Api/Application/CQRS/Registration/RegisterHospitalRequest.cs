@@ -116,7 +116,7 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
                 }
                 cacstream.Position = 0;
 
-                var cacupload = await _cloudinary.UploadImageAsync(cacstream, Guid.NewGuid().ToString());
+                var cacupload = await _cloudinary.UploadFilesAsync(cacstream, Guid.NewGuid().ToString());
                 var nafstream = new MemoryStream();
 
                 using (var stream = request.NafdacDocument!.OpenReadStream())
@@ -124,7 +124,7 @@ public class RegisterHospitalRequestHandler : IRequestHandler<RegisterHospitalRe
                     await stream.CopyToAsync(nafstream);
                 }
                 nafstream.Position = 0;
-                var nafdacupload = await _cloudinary.UploadImageAsync(nafstream,Guid.NewGuid().ToString());
+                var nafdacupload = await _cloudinary.UploadFilesAsync(nafstream,Guid.NewGuid().ToString());
 
                 if (!cacupload.Status || !nafdacupload.Status)
                 {

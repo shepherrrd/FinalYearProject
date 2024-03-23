@@ -71,17 +71,17 @@ public class AddMedicalDataRequestHandler : IRequestHandler<AddMedicalDataReques
 
             request.Reason.OpenReadStream().CopyTo(reasonstream);
             reasonstream.Position = 0;
-            var reasoned = await _cloudinary.UploadImageAsync(reasonstream, Guid.NewGuid().ToString());
+            var reasoned = await _cloudinary.UploadFilesAsync(reasonstream, Guid.NewGuid().ToString());
 
             var IrbApproval = new MemoryStream();
             request.IRBApproval.OpenReadStream().CopyTo(IrbApproval);
             IrbApproval.Position = 0;
-            var irb = await _cloudinary.UploadImageAsync(IrbApproval, Guid.NewGuid().ToString());
+            var irb = await _cloudinary.UploadFilesAsync(IrbApproval, Guid.NewGuid().ToString());
 
             var researchmemoryStream = new MemoryStream();
             request.Proposal.OpenReadStream().CopyTo(researchmemoryStream);
             researchmemoryStream.Position = 0;
-            var research = await _cloudinary.UploadImageAsync(researchmemoryStream, Guid.NewGuid().ToString());
+            var research = await _cloudinary.UploadFilesAsync(researchmemoryStream, Guid.NewGuid().ToString());
 
             if (!reasoned.Status || !irb.Status || !research.Status)
             {
