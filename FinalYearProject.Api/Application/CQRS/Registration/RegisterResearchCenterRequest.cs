@@ -127,17 +127,17 @@ public class RegisterResearchCenterRequestHandler : IRequestHandler<RegisterRese
                 var degreememoryStream = new MemoryStream();
                 request.Degree.OpenReadStream().CopyTo(degreememoryStream);
                 degreememoryStream.Position = 0;
-                var degree = await _cloudinary.UploadImageAsync(degreememoryStream, Guid.NewGuid().ToString());
+                var degree = await _cloudinary.UploadFilesAsync(degreememoryStream, Guid.NewGuid().ToString());
 
                 var researchmemoryStream = new MemoryStream();
                 request.ResearchProposal.OpenReadStream().CopyTo(researchmemoryStream);
                 researchmemoryStream.Position = 0;
-                var research = await _cloudinary.UploadImageAsync(researchmemoryStream, Guid.NewGuid().ToString());
+                var research = await _cloudinary.UploadFilesAsync(researchmemoryStream, Guid.NewGuid().ToString());
 
                 var irbapprovalmemoryStream = new MemoryStream();
                 request.IrbApproval.OpenReadStream().CopyTo(irbapprovalmemoryStream);
                 irbapprovalmemoryStream.Position = 0;
-                var irbapproval = await _cloudinary.UploadImageAsync(irbapprovalmemoryStream, Guid.NewGuid().ToString());
+                var irbapproval = await _cloudinary.UploadFilesAsync(irbapprovalmemoryStream, Guid.NewGuid().ToString());
 
                 if (!passport.Status || !degree.Status || !research.Status || !irbapproval.Status)
                 {

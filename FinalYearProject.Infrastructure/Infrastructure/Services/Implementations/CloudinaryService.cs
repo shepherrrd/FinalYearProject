@@ -60,12 +60,51 @@ public class CloudinaryService : ICloudinaryService
                 return new BaseResponse(false, "");
             }
             _logger.LogInformation("CLOUDINARY_SERVICE => uploading image");
+            stream.Dispose();
+
             return new BaseResponse(true, uploadResult.SecureUrl.ToString());
 
         }
         catch (Exception ex)
         {
             _logger.LogInformation(ex, "CLOUDINARY_SERVICE => Failed To upload Image");
+            stream.Dispose();
+
+            return new BaseResponse(false, "Unable to Upload Image");
+        }
+    }
+
+    public async Task<BaseResponse> UploadFilesAsync(MemoryStream stream, string fileName)
+    {
+        try
+        {
+            string cloudName = $"{_config["Cloudinary:CloudName"]}";
+            string ApiKey = $"{_config["Cloudinary:ApiKey"]}";
+            string SecretKey = $"{_config["Cloudinary:SecretKey"]}";
+            var account = new Account(cloudName, ApiKey, SecretKey);
+            Cloudinary cloudinary = new(account);
+            cloudinary.Api.Secure = true;
+            stream.Seek(0, SeekOrigin.Begin);
+            var uploadParams = new RawUploadParams()
+            {
+                File = new FileDescription(fileName, stream),
+                PublicId = fileName,
+                Overwrite = true,
+            };
+            var uploadResult = await cloudinary.UploadAsync(uploadParams);
+            if (uploadResult.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                return new BaseResponse(false, "");
+            }
+            _logger.LogInformation("CLOUDINARY_SERVICE => uploading image");
+            stream.Dispose();
+            return new BaseResponse(true, uploadResult.SecureUrl.ToString());
+
+        }
+        catch (Exception ex)
+        {
+            _logger.LogInformation(ex, "CLOUDINARY_SERVICE => Failed To upload Image");
+            stream.Dispose();
             return new BaseResponse(false, "Unable to Upload Image");
         }
     }
