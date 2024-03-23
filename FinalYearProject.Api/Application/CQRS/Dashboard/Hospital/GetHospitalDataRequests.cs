@@ -51,6 +51,12 @@ public class GetHospitalDataRequestsHandler : IRequestHandler<GetHospitalDataReq
                 var irbProposal = await _context.Documents.AsNoTracking()
                     .Where(k => k.Id == x.IrbProposalId)
                     .FirstOrDefaultAsync(cancellationToken);
+                var irbapproval = await _context.Documents.AsNoTracking()
+                   .Where(k => k.Id == x.IrbApproval)
+                   .FirstOrDefaultAsync(cancellationToken);
+                var reason = await _context.Documents.AsNoTracking()
+                  .Where(k => k.Id == x.Reason)
+                  .FirstOrDefaultAsync(cancellationToken);
 
                 var passports = await _context.ResearchCenterInfo.AsNoTracking()
                     .Where(researchInfo => researchInfo.ID == research!.ResearchCenterInfo)
@@ -67,7 +73,10 @@ public class GetHospitalDataRequestsHandler : IRequestHandler<GetHospitalDataReq
                     Description = x.Description,
                     Id = x.Id,
                     IrbProposal = irbProposal?.Path!,
+                    IrbApproval = irbapproval?.Path!,
+                    Reason = reason?.Path!,
                     Name = $"{research?.FirstName} {research?.LastName}",
+                    TimeCreated = x.TimeCreated,
                     Passport = document?.DocumentPath!,
                     TimeUpdated = x.TimeUpdated
                 };
