@@ -28,18 +28,8 @@ public class UploadMedicalDataRequestValidator : AbstractValidator<UploadMedical
     public UploadMedicalDataRequestValidator()
     {
         RuleFor(x => x.SDTMDATA).NotEmpty().NotNull();
-        RuleFor(x => x.SDTMDATA).Must(x => x.FileName.EndsWith(".csv"))
-             .WithMessage("The file must be a CSV file.");
-        RuleFor(x => x.SDTMDATA.ContentType)
-            .Equal("text/csv")
-            .WithMessage("The file content type must be 'text/csv'.");
 
         RuleFor(x => x.ICDDATA).NotEmpty().NotNull();
-        RuleFor(x => x.ICDDATA).Must(x => x.FileName.EndsWith(".csv"))
-             .WithMessage("The file must be a CSV file.");
-        RuleFor(x => x.ICDDATA.ContentType)
-            .Equal("text/csv")
-            .WithMessage("The file content type must be 'text/csv'.");
     }
 }
 
