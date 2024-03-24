@@ -36,7 +36,8 @@ public class VIewResearchCenterDashboardHandler : IRequestHandler<VIewResearchCe
             }
             var requests = await _context.HospitalRequests.AsNoTracking().Where(x => x.ResearchCenterId == user.Id).ToListAsync();
             var response = new List<DataReuqestDto>();
-            requests.ForEach(async x =>
+
+            foreach (var x in requests)
             {
                 var p = new DataReuqestDto
                 {
@@ -48,10 +49,11 @@ public class VIewResearchCenterDashboardHandler : IRequestHandler<VIewResearchCe
                     Id = x.Id,
                     IrbProposalId = x.IrbProposalId
                 };
-                var f = await _context.HospitalInfos.Select(x => new { x.ID, x.HospitalName }).FirstOrDefaultAsync(t => t.ID == x.Id, cancellationToken);
+                //var jk = await _context.Users.AsNoTracking().FirstOrDefaultAsync(k => k.Id == x.HospitalId,cancellationToken);
+                var f = await _context.HospitalInfos.FirstOrDefaultAsync(t => t.UserId == x.HospitalId, cancellationToken);
                 p.Name = f.HospitalName!;
                 response.Add(p);
-            });
+            };
 
             return new BaseResponse<List<DataReuqestDto>>(true, "Requests Fetched Successfully", response);
         }
