@@ -40,7 +40,7 @@ public class UpdateRegistrationStatusRequestHandler : IRequestHandler<UpdateRegi
             if (request.IsApproved)
             {
                 registration.IsApproved = true; 
-                var registrationed = await _context.Users.FirstOrDefaultAsync(x => x.Id == registration.UserID, cancellationToken);
+                var registrationed = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.RegistrationID, cancellationToken);
                 registrationed!.AccountStatus =  AccountStatusEnum.Active;
                 await _context.SaveChangesAsync(cancellationToken);
             }
