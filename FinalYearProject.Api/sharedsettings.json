@@ -12,7 +12,7 @@
     "Secret": "FinalYear.SecretKey.For.JWT.Authentication",
     "ExpiryMinutes": 525600,
     "Issuer": "shepherd",
-    "Audience" :  "https://localhost:3000"
+    "Audience": "https://localhost:3000"
   },
   "Cloudinary": {
     "CloudName": "digalffym",
@@ -22,7 +22,7 @@
   "SendGrid": {
     "APIKey": "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",
     "FromEmail": "shepherd@panganet.com",
-    "FromName": "Final Year"
+    "FromName": "Final  Year"
   },
   "AllowedHosts": "*"
 }
